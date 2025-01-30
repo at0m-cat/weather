@@ -19,6 +19,9 @@ public class Users {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "login")
+    private String login;
+
     @Column(name = "passworld")
     private String password;
 }
