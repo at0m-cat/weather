@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.data.WeatherData;
 import matveyodintsov.weather.dto.LocationDto;
+import matveyodintsov.weather.exeption.CityNotFoundException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -45,6 +46,9 @@ public class WeatherService {
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
              CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
             JsonNode node = objectMapper.readTree(response.getEntity().getContent());
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new CityNotFoundException("Could not get weather data from " + city);
+            }
             return mapJsonToWeatherData(node);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
