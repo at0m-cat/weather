@@ -12,13 +12,13 @@ public class AuthController {
     @GetMapping("/login")
     public String auth(Model model) {
         model.addAttribute("user", new UsersDto());
-        return "auth";
+        return "auth/auth";
     }
 
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("user", new UsersDto());
-        return "registration";
+        return "auth/registration";
     }
 
     @PostMapping("/registration")
@@ -26,6 +26,6 @@ public class AuthController {
         // TODO: передавать в сервис для сохранения в бд
 
         model.addAttribute("message", "Registration successful!");
-        return "registration-successfully";
+        return "auth/registration-successfully";
     }
 }
