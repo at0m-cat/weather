@@ -24,7 +24,7 @@ spring:
 
 weather:
   url:
-    geo: https://api.openweathermap.org/data/2.5/weather?q={city}&appid={key}
-    weather: https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}
+    geo: https://api.openweathermap.org/data/2.5/weather?q={city}&appid={key}&units=metric
+    weather: https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}&units=metric
   api:
     key: 082bc9e7c960755e8741fb778fa419fc
