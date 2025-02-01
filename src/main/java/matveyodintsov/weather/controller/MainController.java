@@ -8,10 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 @Controller
 @RequestMapping
 public class MainController {
@@ -32,7 +28,7 @@ public class MainController {
 //        BigDecimal lat = map.get("moscow").get(1);
 //        System.out.println(weatherService.getCityWeatherByCoordinate(lon, lat));
         model.addAttribute("users", userService.getUsers());
-        model.addAttribute("weatherData", weatherService.getWeather("krasnoyarsk"));
+        model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
         return "index";
     }
 

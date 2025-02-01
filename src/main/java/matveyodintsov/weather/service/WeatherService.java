@@ -3,8 +3,6 @@ package matveyodintsov.weather.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.data.WeatherData;
-import matveyodintsov.weather.dto.LocationDto;
-import matveyodintsov.weather.model.Location;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -14,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WeatherService {
@@ -34,6 +34,16 @@ public class WeatherService {
         this.locationService = locationService;
     }
 
+    public List<WeatherData> getDefaultWeatherData() {
+        List<WeatherData> weatherDataList = new ArrayList<>();
+        weatherDataList.add(getWeather("krasnoyarsk"));
+        weatherDataList.add(getWeather("zelenogorsk"));
+        weatherDataList.add(getWeather("moscow"));
+        weatherDataList.add(getWeather("yakutsk"));
+
+        return weatherDataList;
+    }
+
     public WeatherData getWeather(String city) {
         String url = requestByCityUrl
                 .replace("{city}", city)
@@ -43,27 +53,29 @@ public class WeatherService {
              CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
 
             JsonNode node = objectMapper.readTree(response.getEntity().getContent());
-            BigDecimal lon = node.get("coord").get("lon").decimalValue();
-            BigDecimal lat = node.get("coord").get("lat").decimalValue();
+//            BigDecimal lon = node.get("coord").get("lon").decimalValue();
+//            BigDecimal lat = node.get("coord").get("lat").decimalValue();
 
-            WeatherData weatherData = new WeatherData();
-            weatherData.setCityName(city);
-            weatherData.setIconUrl(node.get("weather").get(0).get("icon").asText());
-            weatherData.setTemperature(node.get("main").get("temp").decimalValue().subtract(BigDecimal.valueOf(273.15)));
-            weatherData.setDescription(node.get("weather").get(0).get("description").asText());
-            weatherData.setFeelsLike(node.get("main").get("feels_like").decimalValue().subtract(BigDecimal.valueOf(273.15)));
-            weatherData.setWindSpeed(node.get("wind").get("speed").decimalValue());
-            weatherData.setHumidity(node.get("main").get("humidity").decimalValue());
-            weatherData.setPressure(node.get("main").get("pressure").decimalValue());
-            return weatherData;
+            return mapJsonToWeatherData(node, city);
 
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    private WeatherData mapJsonToWeatherData(JsonNode node, String city) {
+        WeatherData weatherData = new WeatherData();
+        weatherData.setCityName(city);
+        weatherData.setIconUrl(node.get("weather").get(0).get("icon").asText());
+        weatherData.setTemperature(node.get("main").get("temp").decimalValue().subtract(BigDecimal.valueOf(273.15)));
+        weatherData.setDescription(node.get("weather").get(0).get("description").asText());
+        weatherData.setFeelsLike(node.get("main").get("feels_like").decimalValue().subtract(BigDecimal.valueOf(273.15)));
+        weatherData.setWindSpeed(node.get("wind").get("speed").decimalValue());
+        weatherData.setHumidity(node.get("main").get("humidity").decimalValue());
+        weatherData.setPressure(node.get("main").get("pressure").decimalValue());
+        return weatherData;
+    }
 }
-
-
 
 
 //
