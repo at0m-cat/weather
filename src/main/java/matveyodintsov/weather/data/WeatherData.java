@@ -1,5 +1,7 @@
 package matveyodintsov.weather.data;
 
+import matveyodintsov.weather.dto.LocationDto;
+
 import java.math.BigDecimal;
 
 public class WeatherData {
@@ -12,6 +14,7 @@ public class WeatherData {
     private BigDecimal windSpeed;
     private BigDecimal humidity;
     private BigDecimal pressure;
+    private LocationDto location;
 
     public WeatherData() {
     }
@@ -79,5 +82,13 @@ public class WeatherData {
 
     public void setPressure(BigDecimal pressure) {
         this.pressure = pressure;
+    }
+
+    public LocationDto getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDto location) {
+        this.location = location;
     }
 }

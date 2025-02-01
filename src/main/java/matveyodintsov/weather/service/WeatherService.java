@@ -3,6 +3,7 @@ package matveyodintsov.weather.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.data.WeatherData;
+import matveyodintsov.weather.dto.LocationDto;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -53,8 +54,6 @@ public class WeatherService {
              CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
 
             JsonNode node = objectMapper.readTree(response.getEntity().getContent());
-//            BigDecimal lon = node.get("coord").get("lon").decimalValue();
-//            BigDecimal lat = node.get("coord").get("lat").decimalValue();
 
             return mapJsonToWeatherData(node, city);
 
@@ -73,6 +72,10 @@ public class WeatherService {
         weatherData.setWindSpeed(node.get("wind").get("speed").decimalValue());
         weatherData.setHumidity(node.get("main").get("humidity").decimalValue());
         weatherData.setPressure(node.get("main").get("pressure").decimalValue());
+        LocationDto locationDto = new LocationDto();
+        locationDto.setLongitude(node.get("coord").get("lon").decimalValue());
+        locationDto.setLatitude(node.get("coord").get("lat").decimalValue());
+        weatherData.setLocation(locationDto);
         return weatherData;
     }
 }
