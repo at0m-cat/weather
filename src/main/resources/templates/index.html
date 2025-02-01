@@ -14,8 +14,9 @@
     <div class="container">
         <a class="navbar-brand" href="#">Weather App</a>
         <div class="d-flex">
-            <span class="navbar-text me-3" id="user-name"></span>
-            <button class="btn btn-light" id="auth-btn">Login / Registration</button>
+            <span class="navbar-text me-3" th:if="${username}" th:text="${username}">User</span>
+            <a class="btn btn-light" th:if="${username}" href="/logout">Logout</a>
+            <a class="btn btn-light" th:unless="${username}" href="/login" th:method="get">Login</a>
         </div>
     </div>
 </nav>
