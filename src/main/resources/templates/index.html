@@ -9,7 +9,6 @@
     <link th:href="@{/css/style.css}" rel="stylesheet"/>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="#">Weather App</a>
@@ -21,26 +20,39 @@
     </div>
 </nav>
 
-<div class="container mt-5">
-    <h2>List if USERS</h2>
+<div class="container mt-4">
+    <div class="d-flex flex-wrap align-items-start align-items-center">
 
-    <p th:text="${users}">users</p>
+        <div class="weather-card me-3" th:each="weather : ${weatherData}">
+            <div class="weather-header">
+                <h2 th:text="${weather.cityName}">City Name</h2>
+                <img th:src="${weather.iconUrl}" alt="Weather Icon">
+            </div>
+            <div class="weather-info">
+                <p class="temperature">
+                    <span th:text="${weather.temperature}">0</span>°C
+                    <span th:text="${weather.description}">Weather Description</span>
+                </p>
+                <div class="weather-details">
+                    <p>🌡 Feels like: <span th:text="${weather.feelsLike}">0</span>°C</p>
+                    <p>💨 Wind: <span th:text="${weather.windSpeed}">0</span> m/s</p>
+                    <p>🌬️ Humidity: <span th:text="${weather.humidity}">0</span>%</p>
+                    <p>📍 Pressure: <span th:text="${weather.pressure}">0</span> hPa</p>
+                </div>
+            </div>
+        </div>
 
-    <table class="table table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>Login</th>
-            <th>Password</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.login}">login</td>
-            <td th:text="${user.password}">pass</td>
-        </tr>
-        </tbody>
-    </table>
+        <div class="weather-card add-city-card">
+            <div class="add-city-content">
+                <span class="plus-icon">+</span>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 </body>
 </html>
+
+
+

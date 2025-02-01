@@ -19,14 +19,110 @@ body::before {
 }
 
 .weather-card {
-    background: rgba(255, 255, 255, 0.2);
+    max-width: 300px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
     border-radius: 15px;
     padding: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease-out forwards;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin: 10px;
 }
+
+.weather-card:hover {
+    transform: translateY(0px) scale(1.05);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.weather-header {
+    color: chocolate;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.weather-header h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.weather-header img {
+    width: 50px;
+    height: 50px;
+}
+
+.weather-details p {
+    font-size: 14px;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: cadetblue;
+}
+
+
+.temperature {
+    color: chocolate;
+    font-size: 26px;
+    font-weight: bold;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.temperature span {
+    font-size: 18px;
+    color: cadetblue;
+    /*color: #eee;*/
+}
+
+.weather-details p {
+    font-size: 14px;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.add-city-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.add-city-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.add-city-content {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.plus-icon {
+    font-size: 48px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.add-city-card:hover .plus-icon {
+    transform: scale(1.1);
+    color: rgba(255, 255, 255, 1);
+}
+
 
 @keyframes fadeInUp {
     from {
@@ -70,7 +166,10 @@ body::before {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    /*transform: translate(-50%, -50%);*/
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
 
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.8);
@@ -95,4 +194,10 @@ body::before {
 
 .hidden.show {
     opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .add-city-card {
+        max-width: 100%;
+    }
 }
