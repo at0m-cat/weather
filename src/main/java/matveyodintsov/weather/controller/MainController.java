@@ -23,11 +23,6 @@ public class MainController {
 
     @GetMapping
     public String index(Model model) {
-//        Map<String, List<BigDecimal>> map = weatherService.getCityCoordinateByCityName("moscow");
-//        BigDecimal lon = map.get("moscow").get(0);
-//        BigDecimal lat = map.get("moscow").get(1);
-//        System.out.println(weatherService.getCityWeatherByCoordinate(lon, lat));
-        model.addAttribute("users", userService.getUsers());
         model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
         return "index";
     }
