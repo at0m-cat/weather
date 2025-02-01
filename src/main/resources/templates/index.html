@@ -21,7 +21,24 @@
 </nav>
 
 <div class="container mt-5">
-    <div class="row" id="weather-cards"></div>
+    <h2>List if USERS</h2>
+
+    <p th:text="${users}">users</p>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Login</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.login}">login</td>
+            <td th:text="${user.password}">pass</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 </body>

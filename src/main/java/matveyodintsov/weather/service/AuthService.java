@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    SessionRepository sessionRepository;
-    UserRepository userRepository;
+    private SessionRepository sessionRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public AuthService(SessionRepository sessionRepository, UserRepository userRepository) {
@@ -18,7 +18,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    
+
     public void login(Users user) {
 
     }

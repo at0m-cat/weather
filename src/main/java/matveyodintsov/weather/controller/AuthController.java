@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping()
 public class AuthController {
 
-    AuthService authService;
+    private AuthService authService;
 
     @Autowired
     public AuthController(AuthService authService) {
