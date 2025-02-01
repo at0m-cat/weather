@@ -176,6 +176,32 @@ body::before {
     animation: fadeInZoom 0.6s ease-out forwards;
 }
 
+.delete-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.delete-btn:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.1);
+}
+
+.delete-btn i {
+    color: white;
+    font-size: 20px;
+}
+
 @keyframes fadeInZoom {
     from {
         opacity: 0;
