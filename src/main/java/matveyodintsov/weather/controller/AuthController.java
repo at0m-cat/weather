@@ -1,6 +1,5 @@
 package matveyodintsov.weather.controller;
 
-import lombok.AllArgsConstructor;
 import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @GetMapping("/login")
     public String auth(Model model) {
