@@ -1,12 +1,12 @@
 package matveyodintsov.weather.service;
 
+import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,12 +18,21 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<Users> getUsers() {
-        List<Users> users = userRepository.findAll();
-        if (users.isEmpty()) {
-            return Collections.emptyList();
+    public void save(Users user) {
+        userRepository.save(user);
+    }
+
+    public Users findByLoginAndPassword(Users user) {
+        Optional<Users> userOptional = Optional.ofNullable(userRepository.findByLoginAndPassword(user));
+        return userOptional.orElseThrow(() -> new AuthNotFoundException("Invalid username or password"));
+    }
+
+    public boolean existsByLogin(Users user) {
+        if (userRepository.existsByLogin(user.getLogin())) {
+            throw new AuthNotFoundException("Login already exists");
+        } else {
+            return false;
         }
-        return users;
     }
 
 }
