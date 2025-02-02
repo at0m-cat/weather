@@ -28,13 +28,14 @@ public class AuthController {
         return "auth/auth";
     }
 
+    @GetMapping("/registration")
+    public String registration(Model model) {
+        model.addAttribute("user", new UsersDto());
+        return "auth/registration";
+    }
+
     @PostMapping("/login")
     public String login(@ModelAttribute("user") UsersDto usersDto, Model model) {
-
-
-        // todo: проверить в базе, если есть - редирект home
-        //  если в базе нет - ошибка входа
-//
         try {
             authService.login(usersDto);
         } catch (AuthNotFoundException e) {
@@ -43,11 +44,6 @@ public class AuthController {
         return "index";
     }
 
-    @GetMapping("/registration")
-    public String registration(Model model) {
-        model.addAttribute("user", new UsersDto());
-        return "auth/registration";
-    }
 
     @PostMapping("/registration")
     public String doRegistration(@ModelAttribute("user") UsersDto user, Model model) {
@@ -64,12 +60,6 @@ public class AuthController {
         } catch (Exception e) {
             return "auth/registration-failed";
         }
-
-
-        // TODO: передавать в сервис для сохранения в бд
-
-        // todo: проверить в базе, если нет - регистрация
-        //  если в базе есть - ошибка регистрации
 
         model.addAttribute("message", "Registration successful!");
         return "auth/registration-successfully";
