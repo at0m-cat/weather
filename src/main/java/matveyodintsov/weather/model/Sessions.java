@@ -3,6 +3,7 @@ package matveyodintsov.weather.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "sessions")
@@ -13,7 +14,8 @@ public class Sessions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private UUID id;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -22,11 +24,11 @@ public class Sessions {
     @Column(name = "expires_at")
     private Date ExpiresAt;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
