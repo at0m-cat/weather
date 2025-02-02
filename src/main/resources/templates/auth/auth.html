@@ -17,14 +17,19 @@
 </nav>
 
 <div class="container mt-5" id="auth-form">
-    <div class="card auth-container p-4">
+    <form class="card auth-container p-4"
+         th:object="${user}"
+         th:method="post"
+         th:action="@{/login}">
+
         <h3 class="text-center">Authorization</h3>
-        <input type="text" id="username" class="form-control my-2" placeholder="Login">
-        <input type="password" id="password" class="form-control my-2" placeholder="Password">
-        <button class="btn btn-primary w-100" id="login-btn">Sign in</button>
+        <input type="text" id="username" class="form-control my-2" placeholder="Login" th:field="*{login}">
+        <input type="password" id="password" class="form-control my-2" placeholder="Password" th:field="*{password}">
+        <button type="submit" class="btn btn-primary w-100" id="login-btn">Sign in</button>
+
         <p class="text-center mt-3">or create an account</p>
         <a href="/registration" class="btn btn-primary w-100" id="create-btn">Create account</a>
-    </div>
+    </form>
 </div>
 
 </body>

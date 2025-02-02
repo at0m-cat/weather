@@ -1,5 +1,7 @@
 package matveyodintsov.weather.service;
 
+import matveyodintsov.weather.dto.UsersDto;
+import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.SessionRepository;
 import matveyodintsov.weather.repository.UserRepository;
@@ -18,17 +20,25 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
+    public void login(UsersDto userDto) throws AuthNotFoundException {
+        Users userFind = null;
+        userFind = userRepository.findByLoginAndPassword(mapToUsers(userDto));
+        if (userFind == null) {
+            throw new AuthNotFoundException("Invalid username or password");
+        }
+    }
 
-    public void login(Users user) {
+    public void logout(UsersDto user) {
 
     }
 
-    public void logout(Users user) {
-
-    }
-
-    public void register(Users user) {
-
+    public void register(UsersDto userDto) {
+        Users user = mapToUsers(userDto);
+        if (userRepository.existsByLogin(user.getLogin())) {
+            throw new AuthNotFoundException("Login already exists");
+        } else {
+            userRepository.save(user);
+        }
     }
 
     private void createCookie() {
@@ -37,6 +47,13 @@ public class AuthService {
 
     private void deleteCookie() {
 
+    }
+
+    private Users mapToUsers(UsersDto usersDto) {
+        Users users = new Users();
+        users.setLogin(usersDto.getLogin().toLowerCase());
+        users.setPassword(usersDto.getPassword());
+        return users;
     }
 
 }

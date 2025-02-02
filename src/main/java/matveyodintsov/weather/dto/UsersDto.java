@@ -4,6 +4,7 @@ public class UsersDto {
     private Long id;
     private String login;
     private String password;
+    private String repeatPassword;
 
     public Long getId() {
         return id;
@@ -29,12 +30,21 @@ public class UsersDto {
         this.password = password;
     }
 
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
+    }
+
     @Override
     public String toString() {
         return "UsersDto{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
+                ", repeatPassword='" + repeatPassword + '\'' +
                 '}';
     }
 }
