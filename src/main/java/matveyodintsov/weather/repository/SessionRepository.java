@@ -17,4 +17,5 @@ public interface SessionRepository extends JpaRepository<Sessions, Long> {
 
     @Query("SELECT s from Sessions s where s.id = :sessionId")
     Sessions findBySessionId(@Param("sessionId") UUID sessionId);
+
 }

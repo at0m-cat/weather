@@ -53,12 +53,14 @@ public class SessionService {
     public Sessions createSession(Users user) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 1);
-
-        Sessions session = new Sessions();
-        session.setUserId(user);
-        session.setExpiresAt(calendar.getTime());
-
+        Sessions session = sessionRepository.findByUserId(user);
+        if (session == null) {
+            session = new Sessions();
+            session.setUserId(user);
+            session.setExpiresAt(calendar.getTime());
+        }
         return sessionRepository.save(session);
     }
+
 
 }

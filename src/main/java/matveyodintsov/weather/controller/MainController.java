@@ -21,7 +21,7 @@ public class MainController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping
+    @GetMapping("/default")
     public String index(Model model) {
         model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
         return "index";
