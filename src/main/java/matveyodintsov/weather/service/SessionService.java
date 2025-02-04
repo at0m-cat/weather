@@ -1,7 +1,6 @@
 package matveyodintsov.weather.service;
 
 import jakarta.servlet.http.Cookie;
-import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;

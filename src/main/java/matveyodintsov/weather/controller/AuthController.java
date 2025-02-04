@@ -1,11 +1,9 @@
 package matveyodintsov.weather.controller;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
-import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.AuthService;
@@ -52,7 +50,18 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registration(Model model) {
+    public String registration(@CookieValue(value = "weather_app_SessionID", required = false) String sessionId, Model model) {
+        if (sessionId != null) {
+            try {
+                UUID uuid = UUID.fromString(sessionId);
+                Sessions session = sessionService.find(uuid);
+                if (session.getExpiresAt().after(new Date())) {
+                    model.addAttribute("user", session.getUserId());
+                    return "index";
+                }
+            } catch (Exception ignored) {
+            }
+        }
         model.addAttribute("user", new UsersDto());
         return "auth/registration";
     }
