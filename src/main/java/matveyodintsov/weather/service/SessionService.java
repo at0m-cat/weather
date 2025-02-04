@@ -26,18 +26,13 @@ public class SessionService {
     }
 
     public Sessions find(UUID sessionId) throws SessionNotFoundException {
-        Optional<Sessions> sessionsOptional = Optional.ofNullable(sessionRepository.findBySessionId(sessionId));
-        if (sessionsOptional.isPresent()) {
-            return sessionsOptional.get();
-        } else {
-            throw new SessionNotFoundException("Session not found");
-        }
+        return Optional.ofNullable(sessionRepository.findBySessionId(sessionId))
+                .orElseThrow(() -> new SessionNotFoundException("Session not found"));
     }
 
     public void deleteSession(UUID sessionId) throws SessionNotFoundException {
-        Optional<Sessions> sessionsOptional = Optional.ofNullable(sessionRepository.findBySessionId(sessionId));
-        if (sessionsOptional.isPresent()) {
-            sessionRepository.delete(sessionsOptional.get());
+        if (sessionRepository.existsById(sessionId)) {
+            sessionRepository.deleteById(sessionId);
         } else {
             throw new SessionNotFoundException("Session not found");
         }
@@ -59,8 +54,7 @@ public class SessionService {
             session.setUserId(user);
             session.setExpiresAt(calendar.getTime());
         }
+        session.setExpiresAt(calendar.getTime());
         return sessionRepository.save(session);
     }
-
-
 }
