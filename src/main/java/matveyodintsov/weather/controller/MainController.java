@@ -32,6 +32,10 @@ public class MainController {
     public String main(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, HttpServletResponse response, Model model) {
         model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
         Users user = sessionInterceptor.getUserFromSession(sessionId);
+
+        // todo получить юзера - отправить юзера в сервис погоды - получить его погоду по координатам из сервиса локаций
+        //  если нет, голая страница с поиском погоды
+
         model.addAttribute("user", user);
         return "index";
     }
