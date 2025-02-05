@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class LocationService {
@@ -38,7 +40,8 @@ public class LocationService {
     }
 
     public Location findByName(String name) {
-        return locationRepository.findB
+        return Optional.ofNullable(locationRepository.findByName(name))
+                .orElseThrow(() -> new NoSuchElementException("No location found with name: " + name));
     }
 
 }
