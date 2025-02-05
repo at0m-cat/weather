@@ -22,10 +22,10 @@
         </div>
     </div>
 </nav>
-<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-    <form th:action="@{/weather/find}" method="post" class="card auth-container p-4 text-center">
+<div class="container d-flex justify-content-center align-items-center " style="height: 100vh;">
+    <form th:action="@{/weather/find}" th:object="${weather}" method="post" class="card auth-container p-4 text-center">
         <label for="cityName">Enter the name of the city</label>
-        <input type="text" class="form-control" id="cityName" name="cityName" required>
+        <input type="text" class="form-control" id="cityName" th:field="${weather.cityName}" name="cityName" required>
         <button type="submit" class="btn btn-primary w-100">Find weather!</button>
     </form>
 </div>

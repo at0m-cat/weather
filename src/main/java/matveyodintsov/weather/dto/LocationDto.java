@@ -8,6 +8,7 @@ public class LocationDto {
     private BigDecimal latitude;
     private BigDecimal longitude;
 
+
     public Long getId() {
         return id;
     }

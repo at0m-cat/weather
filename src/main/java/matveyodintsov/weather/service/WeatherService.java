@@ -39,6 +39,11 @@ public class WeatherService {
     }
 
     public WeatherData getWeather(String city) {
+        String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
+        if (!city.matches(regex)) {
+            throw new CityNotFoundException("Incorrect city name: " + city);
+        }
+
         String url = requestByCityUrl
                 .replace("{city}", city)
                 .replace("{key}", key);
