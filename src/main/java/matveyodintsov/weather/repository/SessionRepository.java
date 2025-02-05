@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.UUID;
 
 @EnableJpaRepositories
@@ -25,5 +26,10 @@ public interface SessionRepository extends JpaRepository<Sessions, Long> {
     @Modifying
     @Transactional
     void deleteById(UUID sessionId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Sessions s WHERE s.expiresat < :timeLimit")
+    int deleteByCreatedAtBefore(@Param("timeLimit") Date timeLimit);
 
 }

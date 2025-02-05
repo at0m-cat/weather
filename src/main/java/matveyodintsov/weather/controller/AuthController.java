@@ -1,92 +1,68 @@
 package matveyodintsov.weather.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
-import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.AuthService;
-import matveyodintsov.weather.service.SessionService;
-import matveyodintsov.weather.service.UserService;
+import matveyodintsov.weather.util.AppConst;
+import matveyodintsov.weather.util.SessionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Controller
 @RequestMapping()
 public class AuthController {
 
-    private final UserService userService;
     private final AuthService authService;
-    private final SessionService sessionService;
+    private final SessionInterceptor sessionInterceptor;
 
     @Autowired
-    public AuthController(AuthService authService, UserService userService, SessionService sessionService) {
+    public AuthController(AuthService authService, SessionInterceptor sessionInterceptor) {
         this.authService = authService;
-        this.userService = userService;
-        this.sessionService = sessionService;
+        this.sessionInterceptor = sessionInterceptor;
+    }
+
+    private boolean isUserAuthenticated(String sessionId, Model model) {
+        if (sessionId != null) {
+            Users user = sessionInterceptor.getUserFromSession(sessionId);
+            if (user != null) {
+                model.addAttribute("user", user);
+                return true;
+            }
+        }
+        model.addAttribute("user", new UsersDto());
+        return false;
     }
 
     @GetMapping("/login")
-    public String auth(@CookieValue(value = "weather_app_SessionID", required = false) String sessionId, Model model) {
-        if (sessionId != null) {
-            try {
-                UUID uuid = UUID.fromString(sessionId);
-                Sessions session = sessionService.find(uuid);
-                if (session.getExpiresAt().after(new Date())) {
-                    model.addAttribute("user", session.getUserId());
-                    return "index";
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        model.addAttribute("user", new UsersDto());
-        return "auth/auth";
+    public String auth(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
+        return isUserAuthenticated(sessionId, model) ? "index" : "auth/auth";
     }
 
     @GetMapping("/registration")
-    public String registration(@CookieValue(value = "weather_app_SessionID", required = false) String sessionId, Model model) {
-        if (sessionId != null) {
-            try {
-                UUID uuid = UUID.fromString(sessionId);
-                Sessions session = sessionService.find(uuid);
-                if (session.getExpiresAt().after(new Date())) {
-                    model.addAttribute("user", session.getUserId());
-                    return "index";
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        model.addAttribute("user", new UsersDto());
-        return "auth/registration";
+    public String registration(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
+        return isUserAuthenticated(sessionId, model) ? "index" : "auth/registration";
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") UsersDto usersDto, Model model, HttpServletResponse response) {
+    public String login(@ModelAttribute("user") UsersDto usersDto, HttpServletResponse response) {
         try {
             Users user = authService.login(usersDto);
-            Sessions session = sessionService.createSession(user);
-            Cookie cookie = sessionService.getSessionCookie(user);
-            response.addCookie(cookie);
+            sessionInterceptor.createSession(user, response);
+            return "index";
         } catch (AuthNotFoundException e) {
             return "auth/login-failed";
         }
-        return "index";
     }
-
 
     @PostMapping("/registration")
     public String doRegistration(@ModelAttribute("user") UsersDto user, Model model) {
-
-        String password = user.getPassword();
-        String repeatPassword = user.getRepeatPassword();
-
-        if (!password.equals(repeatPassword)) {
+        if (!user.getPassword().equals(user.getRepeatPassword())) {
             return "auth/registration-failed";
         }
 
@@ -101,21 +77,10 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(@CookieValue(value = "weather_app_SessionID", required = false) String sessionId, HttpServletResponse response) {
+    public String logout(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, HttpServletResponse response) {
         if (sessionId != null) {
-            try {
-                sessionService.deleteSession(UUID.fromString(sessionId));
-            } catch (Exception ignored) {
-
-            }
+            sessionInterceptor.deleteSession(UUID.fromString(sessionId), response);
         }
-
-        Cookie sessionCookie = new Cookie("weather_app_SessionID", "");
-        sessionCookie.setMaxAge(0);
-        sessionCookie.setHttpOnly(true);
-        response.addCookie(sessionCookie);
-
         return "redirect:/login";
     }
-
 }

@@ -5,6 +5,7 @@ import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.SessionRepository;
+import matveyodintsov.weather.util.AppConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +41,19 @@ public class SessionService {
 
     public Cookie getSessionCookie(Users user) {
         Sessions session = sessionRepository.findByUserId(user);
-        Cookie cookie = new Cookie("weather_app_SessionID", session.getId().toString());
+        Cookie cookie = new Cookie(AppConst.Constants.sessionID, session.getId().toString());
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    public void updateSession(Sessions session) {
+        sessionRepository.save(session);
+    }
+
+    public int deleteOldSession() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -1);
+        return sessionRepository.deleteByCreatedAtBefore(calendar.getTime());
     }
 
     public Sessions createSession(Users user) {
@@ -52,9 +63,10 @@ public class SessionService {
         if (session == null) {
             session = new Sessions();
             session.setUserId(user);
-            session.setExpiresAt(calendar.getTime());
+            session.setExpiresat(calendar.getTime());
         }
-        session.setExpiresAt(calendar.getTime());
+        session.setExpiresat(calendar.getTime());
         return sessionRepository.save(session);
     }
+
 }

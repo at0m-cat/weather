@@ -22,7 +22,7 @@ public class Sessions {
     private Users userId;
 
     @Column(name = "expires_at")
-    private Date ExpiresAt;
+    private Date expiresat;
 
     public UUID getId() {
         return id;
@@ -40,11 +40,11 @@ public class Sessions {
         this.userId = userId;
     }
 
-    public Date getExpiresAt() {
-        return ExpiresAt;
+    public Date getExpiresat() {
+        return expiresat;
     }
 
-    public void setExpiresAt(Date expiresAt) {
-        ExpiresAt = expiresAt;
+    public void setExpiresat(Date expiresat) {
+        this.expiresat = expiresat;
     }
 }
