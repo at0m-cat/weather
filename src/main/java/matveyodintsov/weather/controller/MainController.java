@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.data.WeatherData;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Users;
+import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.UserService;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConst;
@@ -20,12 +21,14 @@ public class MainController {
     UserService userService;
     WeatherService weatherService;
     SessionInterceptor sessionInterceptor;
+    LocationService locationService;
 
     @Autowired
-    public MainController(UserService userService, WeatherService weatherService, SessionInterceptor sessionInterceptor) {
+    public MainController(UserService userService, WeatherService weatherService, SessionInterceptor sessionInterceptor, LocationService locationService) {
         this.userService = userService;
         this.weatherService = weatherService;
         this.sessionInterceptor = sessionInterceptor;
+        this.locationService = locationService;
     }
 
     @GetMapping("/")

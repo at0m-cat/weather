@@ -1,6 +1,8 @@
 package matveyodintsov.weather.controller;
 
 import matveyodintsov.weather.data.WeatherData;
+import matveyodintsov.weather.model.Users;
+import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConst;
 import matveyodintsov.weather.util.SessionInterceptor;
@@ -15,11 +17,13 @@ public class WeatherController {
 
     SessionInterceptor sessionInterceptor;
     WeatherService weatherService;
+    LocationService locationService;
 
     @Autowired
-    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService weatherService) {
+    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService weatherService, LocationService locationService) {
         this.sessionInterceptor = sessionInterceptor;
         this.weatherService = weatherService;
+        this.locationService = locationService;
     }
 
     @GetMapping("/find")
@@ -32,13 +36,19 @@ public class WeatherController {
     }
 
     @PostMapping("/find")
-    public String getWeather(@ModelAttribute("weather") WeatherData weatherData, Model model) {
+    public String getWeather(@ModelAttribute("weather") WeatherData weatherData,
+                             @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId,
+                             Model model) {
+
+        Users user = sessionInterceptor.getUserFromSession(sessionId);
+        WeatherData weather = weatherService.getWeather(weatherData.getCityName());
+        locationService.save(weather.getLocation(), user);
 
         // todo: найти город - записать координаты пользователю
         //  ( у пользователя на главной странице вытаскивать погоду по координатам )
 
-        model.addAttribute("weatherData", weatherService.getWeather(weatherData.getCityName()));
-        return "index";
+//        model.addAttribute("weatherData", weatherService.getWeather(weatherData.getCityName()));
+        return "redirect:/";
     }
 
 }

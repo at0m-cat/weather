@@ -18,10 +18,13 @@ public class Location {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Users userId;
+    private Users user;
 
     @Column(name = "latitude")
     private BigDecimal latitude;
+
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "longitude")
     private BigDecimal longitude;
@@ -34,12 +37,12 @@ public class Location {
         this.id = id;
     }
 
-    public Users getUserId() {
-        return userId;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUserId(Users userId) {
-        this.userId = userId;
+    public void setUser(Users userId) {
+        this.user = userId;
     }
 
     public BigDecimal getLatitude() {
@@ -56,5 +59,13 @@ public class Location {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

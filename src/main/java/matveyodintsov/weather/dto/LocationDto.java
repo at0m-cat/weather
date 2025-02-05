@@ -4,10 +4,19 @@ import java.math.BigDecimal;
 
 public class LocationDto {
     private Long id;
-    private UsersDto userId;
+    private UsersDto user;
+    private String name;
     private BigDecimal latitude;
     private BigDecimal longitude;
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -17,12 +26,12 @@ public class LocationDto {
         this.id = id;
     }
 
-    public UsersDto getUserId() {
-        return userId;
+    public UsersDto getUser() {
+        return user;
     }
 
-    public void setUserId(UsersDto userId) {
-        this.userId = userId;
+    public void setUser(UsersDto user) {
+        this.user = user;
     }
 
     public BigDecimal getLatitude() {
@@ -45,7 +54,7 @@ public class LocationDto {
     public String toString() {
         return "LocationDto{" +
                 "id=" + id +
-                ", userId=" + userId +
+                ", userId=" + user +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';

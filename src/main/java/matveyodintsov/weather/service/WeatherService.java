@@ -19,6 +19,11 @@ import java.util.List;
 @Service
 public class WeatherService {
 
+    //todo: реализовать поиск координат по названию города
+    //  реализовать метод поиска погоды по координатам
+    // распарсить json один раз (для поиска по координатам)
+    // поиск по названию города - отдать координаты в locationDto
+
     private final String key;
     private final String requestByCityUrl;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -73,6 +78,7 @@ public class WeatherService {
         LocationDto locationDto = new LocationDto();
         locationDto.setLongitude(node.get("coord").get("lon").decimalValue());
         locationDto.setLatitude(node.get("coord").get("lat").decimalValue());
+        locationDto.setName(node.get("name").asText());
         weatherData.setLocation(locationDto);
         return weatherData;
     }
