@@ -3,12 +3,15 @@ package matveyodintsov.weather.util;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import matveyodintsov.weather.dto.UsersDto;
+import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.SessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Calendar;
@@ -34,7 +37,6 @@ public class SessionInterceptor implements HandlerInterceptor {
                 UUID sessionUuid = UUID.fromString(sessionId);
                 Sessions session = sessionService.find(sessionUuid);
                 extendSession(session, response);
-                request.setAttribute(AppConst.Constants.loggerUser, session.getUserId());
             } catch (IllegalArgumentException e) {
                 logger.error("Ошибка преобразования SessionID", e);
             } catch (Exception e) {
@@ -60,13 +62,16 @@ public class SessionInterceptor implements HandlerInterceptor {
         logger.info("Создана новая сессия для пользователя ID: {}", user.getId());
     }
 
-    private void extendSession(Sessions session, HttpServletResponse response) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, 1);
-        session.setExpiresat(calendar.getTime());
-        sessionService.updateSession(session);
-        updateSessionCookie(response, session);
-        logger.info("Сессия продлена. Пользователь ID: {}", session.getUserId().getId());
+    public boolean isUserAuthenticated(String sessionId, Model model) {
+        if (sessionId != null) {
+            Users user = getUserFromSession(sessionId);
+            if (user != null) {
+                model.addAttribute("user", user);
+                return true;
+            }
+        }
+        model.addAttribute("user", new UsersDto());
+        return false;
     }
 
     public void deleteSession(UUID sessionUuid, HttpServletResponse response) {
@@ -75,7 +80,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         logger.info("Сессия истекла и удалена: {}", sessionUuid);
     }
 
-    public Users getUserFromSession(String sessionId) {
+    public Users getUserFromSession(String sessionId) throws SessionNotFoundException {
         try {
             UUID sessionUuid = UUID.fromString(sessionId);
             Sessions session = sessionService.find(sessionUuid);
@@ -83,8 +88,18 @@ public class SessionInterceptor implements HandlerInterceptor {
                 return session.getUserId();
             }
         } catch (Exception ignored) {
+            throw new SessionNotFoundException("Session not found");
         }
         return null;
+    }
+
+    private void extendSession(Sessions session, HttpServletResponse response) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 1);
+        session.setExpiresat(calendar.getTime());
+        sessionService.updateSession(session);
+        updateSessionCookie(response, session);
+        logger.info("Сессия продлена. Пользователь ID: {}", session.getUserId().getId());
     }
 
     private String getSessionIdFromCookies(HttpServletRequest request) {

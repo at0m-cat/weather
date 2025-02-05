@@ -9,20 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    private final SessionService sessionService;
     private final UserService userService;
 
     @Autowired
-    public AuthService(SessionService sessionService, UserService userService) {
-        this.sessionService = sessionService;
+    public AuthService(UserService userService) {
         this.userService = userService;
     }
 
     public Users login(UsersDto userDto) throws AuthNotFoundException {
         return userService.findByLoginAndPassword(userService.mapToUsers(userDto));
-    }
-
-    public void logout(UsersDto user) {
     }
 
     public void register(UsersDto userDto) throws AuthNotFoundException {

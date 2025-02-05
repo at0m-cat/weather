@@ -27,26 +27,14 @@ public class AuthController {
         this.sessionInterceptor = sessionInterceptor;
     }
 
-    private boolean isUserAuthenticated(String sessionId, Model model) {
-        if (sessionId != null) {
-            Users user = sessionInterceptor.getUserFromSession(sessionId);
-            if (user != null) {
-                model.addAttribute("user", user);
-                return true;
-            }
-        }
-        model.addAttribute("user", new UsersDto());
-        return false;
-    }
-
     @GetMapping("/login")
     public String auth(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
-        return isUserAuthenticated(sessionId, model) ? "index" : "auth/auth";
+        return sessionInterceptor.isUserAuthenticated(sessionId, model) ? "index" : "auth/auth";
     }
 
     @GetMapping("/registration")
     public String registration(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
-        return isUserAuthenticated(sessionId, model) ? "index" : "auth/registration";
+        return sessionInterceptor.isUserAuthenticated(sessionId, model) ? "index" : "auth/registration";
     }
 
     @PostMapping("/login")

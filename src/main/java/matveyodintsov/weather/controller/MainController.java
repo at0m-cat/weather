@@ -1,6 +1,7 @@
 package matveyodintsov.weather.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.UserService;
 import matveyodintsov.weather.service.WeatherService;
@@ -29,19 +30,26 @@ public class MainController {
     }
 
     @GetMapping
-    public String main(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, HttpServletResponse response, Model model) {
-        model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
-        Users user = sessionInterceptor.getUserFromSession(sessionId);
+    public String getMainPage(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, HttpServletResponse response, Model model) {
+
+        try {
+            Users user = sessionInterceptor.getUserFromSession(sessionId);
+            model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
+            model.addAttribute("user", user);
+            return "index";
+        } catch (SessionNotFoundException e){
+            return "redirect:/login";
+        }
 
         // todo получить юзера - отправить юзера в сервис погоды - получить его погоду по координатам из сервиса локаций
         //  если нет, голая страница с поиском погоды
 
-        model.addAttribute("user", user);
-        return "index";
+//        model.addAttribute("user", user);
+//        return "index";
     }
 
     @GetMapping("/default")
-    public String index(Model model) {
+    public String test(Model model) {
         model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
         return "index";
     }
