@@ -27,11 +27,14 @@ public class WeatherService {
     private final String key;
     private final String requestByCityUrl;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final LocationService locationService;
 
     public WeatherService(@Value("${weather.api.key}") String apiKey,
-                          @Value("${weather.url.geo}") String requestByCityUrl) {
+                          @Value("${weather.url.geo}") String requestByCityUrl,
+                          LocationService locationService) {
         this.key = apiKey;
         this.requestByCityUrl = requestByCityUrl;
+        this.locationService = locationService;
     }
 
     public List<WeatherData> getDefaultWeatherData() {
@@ -43,6 +46,9 @@ public class WeatherService {
         return weatherDataList;
     }
 
+    //todo: переделать - искать в локациях по имени,
+    // если есть - искать погоду по координатам,
+    // если нет - искать по городу, затем сохранить в базу название города
     public WeatherData getWeather(String city) {
         String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
         if (!city.matches(regex)) {

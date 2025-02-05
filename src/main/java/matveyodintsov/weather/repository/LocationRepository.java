@@ -14,5 +14,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Location findByUserAndName(Users user, String name);
 
+    Location findByName(String name);
+
     boolean existsByUserAndName(Users user, String name);
 }

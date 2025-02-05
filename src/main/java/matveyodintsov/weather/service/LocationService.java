@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class LocationService {
 
-    private LocationRepository locationRepository;
+    private final LocationRepository locationRepository;
 
     @Autowired
     public LocationService(LocationRepository locationRepository) {
@@ -23,20 +23,22 @@ public class LocationService {
     //
 
     public void save(LocationDto locationDto, Users user) {
-        Location location;
         if (!locationRepository.existsByUserAndName(user, locationDto.getName())) {
-            location = new Location();
+            Location location = new Location();
             location.setLatitude(locationDto.getLatitude());
             location.setLongitude(locationDto.getLongitude());
             location.setUser(user);
             location.setName(locationDto.getName());
             locationRepository.save(location);
         }
-
     }
 
     public List<Location> findByUser(Users user) {
         return locationRepository.findAllByUser(user);
+    }
+
+    public Location findByName(String name) {
+        return locationRepository.findB
     }
 
 }
