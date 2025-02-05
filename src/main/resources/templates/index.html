@@ -39,6 +39,8 @@
                     <span th:text="${weather.description}">Weather Description</span>
                 </p>
                 <div class="weather-details">
+                    <p>   Latitude: <span th:text="${weather.location.latitude}">0</span></p>
+                    <p>   Longitude: <span th:text="${weather.location.longitude}">0</span></p>
                     <p>🌡 Feels like: <span th:text="${weather.feelsLike}">0</span>°C</p>
                     <p>💨 Wind: <span th:text="${weather.windSpeed}">0</span> m/s</p>
                     <p>🌬️ Humidity: <span th:text="${weather.humidity}">0</span>%</p>
@@ -50,11 +52,11 @@
             </button>
         </div>
 
-        <div class="weather-card add-city-card">
-            <div class="add-city-content">
-                <span class="plus-icon">+</span>
-            </div>
-        </div>
+        <form class="weather-card add-city-card"  id="add-city-form">
+            <a class="add-city-content" th:href="@{/weather/find}">
+                <i class="fas fa-plus"></i>
+            </a>
+        </form>
 
     </div>
 </div>

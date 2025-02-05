@@ -34,7 +34,7 @@ public class WeatherService {
         weatherDataList.add(getWeather("krasnoyarsk"));
         weatherDataList.add(getWeather("zelenogorsk"));
         weatherDataList.add(getWeather("moscow"));
-        weatherDataList.add(getWeather("yakutsk"));
+        weatherDataList.add(getWeather("санкт-петербург"));
         return weatherDataList;
     }
 
