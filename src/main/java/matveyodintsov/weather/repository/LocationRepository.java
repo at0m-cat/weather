@@ -16,5 +16,9 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Location findByName(String name);
 
+    // todo: пересмотреть методы exist by !!
+
     boolean existsByUserAndName(Users user, String name);
+
+    boolean existsByName(String name);
 }

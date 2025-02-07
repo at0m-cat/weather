@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.data.WeatherData;
 import matveyodintsov.weather.dto.LocationDto;
 import matveyodintsov.weather.exeption.CityNotFoundException;
+import matveyodintsov.weather.model.Location;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -26,14 +27,17 @@ public class WeatherService {
 
     private final String key;
     private final String requestByCityUrl;
+    private final String requestByLocationUrl;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final LocationService locationService;
 
     public WeatherService(@Value("${weather.api.key}") String apiKey,
                           @Value("${weather.url.geo}") String requestByCityUrl,
+                          @Value("${weather.url.weather}") String weatherApiUrl,
                           LocationService locationService) {
         this.key = apiKey;
         this.requestByCityUrl = requestByCityUrl;
+        this.requestByLocationUrl = weatherApiUrl;
         this.locationService = locationService;
     }
 
@@ -45,6 +49,46 @@ public class WeatherService {
         weatherDataList.add(getWeather("санкт-петербург"));
         return weatherDataList;
     }
+
+    //todo: upd Ищем координаты по названию города,
+    // передаем координаты дальше в поиск погоды по координатам (придумать метод)
+
+    public Location findCityLocation(String city) {
+        String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
+        if (!city.matches(regex)) {
+            throw new CityNotFoundException("Incorrect city name: " + city);
+        }
+        if (locationService.existByName(city)) {
+            System.out.println("finded");
+            return locationService.findByName(city);
+
+        }
+
+        String url = requestByCityUrl
+                .replace("{city}", city)
+                .replace("{key}", key);
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
+            JsonNode node = objectMapper.readTree(response.getEntity().getContent());
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new CityNotFoundException("Could not get weather data from " + city);
+            }
+            Location location = new Location();
+            location.setLongitude(node.get("coord").get("lon").decimalValue());
+            location.setLatitude(node.get("coord").get("lat").decimalValue());
+            location.setName(node.get("name").asText());
+            System.out.println(location);
+            return location;
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+    }
+
+
+
+
 
     //todo: переделать - искать в локациях по имени,
     // если есть - искать погоду по координатам,

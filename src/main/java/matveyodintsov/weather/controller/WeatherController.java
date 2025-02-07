@@ -1,6 +1,7 @@
 package matveyodintsov.weather.controller;
 
 import matveyodintsov.weather.data.WeatherData;
+import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.WeatherService;
@@ -41,8 +42,12 @@ public class WeatherController {
                              Model model) {
 
         Users user = sessionInterceptor.getUserFromSession(sessionId);
-        WeatherData weather = weatherService.getWeather(weatherData.getCityName());
-        locationService.save(weather.getLocation(), user);
+//        WeatherData weather = weatherService.getWeather(weatherData.getCityName());
+//        locationService.save(weather.getLocation(), user);
+//        locationService.findByName(weatherData.getCityName());
+
+        Location location = weatherService.findCityLocation(weatherData.getCityName());
+        locationService.save(location, user);
 
         // todo: найти город - записать координаты пользователю
         //  ( у пользователя на главной странице вытаскивать погоду по координатам )

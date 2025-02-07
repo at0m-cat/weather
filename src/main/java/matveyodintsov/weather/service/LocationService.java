@@ -24,15 +24,16 @@ public class LocationService {
     // todo: если город уже есть в базе - брать его координаты
     //
 
-    public void save(LocationDto locationDto, Users user) {
-        if (!locationRepository.existsByUserAndName(user, locationDto.getName())) {
-            Location location = new Location();
-            location.setLatitude(locationDto.getLatitude());
-            location.setLongitude(locationDto.getLongitude());
-            location.setUser(user);
-            location.setName(locationDto.getName());
-            locationRepository.save(location);
+    public void save(Location loc, Users user) {
+        if (!locationRepository.existsByUserAndName(user, loc.getName())) {
+            loc.setUser(user);
+            loc.setName(loc.getName().toUpperCase());
+            locationRepository.save(loc);
         }
+    }
+
+    public boolean existByName(String name) {
+        return locationRepository.existsByName(name);
     }
 
     public List<Location> findByUser(Users user) {
@@ -40,7 +41,7 @@ public class LocationService {
     }
 
     public Location findByName(String name) {
-        return Optional.ofNullable(locationRepository.findByName(name))
+        return Optional.ofNullable(locationRepository.findByName(name.toUpperCase()))
                 .orElseThrow(() -> new NoSuchElementException("No location found with name: " + name));
     }
 
