@@ -1,7 +1,6 @@
 package matveyodintsov.weather.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
@@ -16,7 +15,6 @@ import java.util.List;
 public class LocationService {
 
     private final LocationRepository locationRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public LocationService(LocationRepository locationRepository) {
@@ -47,8 +45,8 @@ public class LocationService {
     public Location createLocation (JsonNode node, Users user) {
         Location location = new Location();
         location.setName(node.get("name").asText().toUpperCase());
-        location.setLatitude(node.get("coord").get("lon").decimalValue());
-        location.setLongitude(node.get("coord").get("lat").decimalValue());
+        location.setLongitude(node.get("coord").get("lon").decimalValue());
+        location.setLatitude(node.get("coord").get("lat").decimalValue());
         location.setUser(user);
         return location;
     }
@@ -74,6 +72,5 @@ public class LocationService {
         return locationRepository.findByName(name.toUpperCase())
                 .orElseThrow(() -> new LocationNotFoundDataBase("City not found in DB: " + name));
     }
-
 
 }

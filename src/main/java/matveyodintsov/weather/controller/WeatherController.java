@@ -2,9 +2,7 @@ package matveyodintsov.weather.controller;
 
 import matveyodintsov.weather.data.WeatherData;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
-import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
-import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConst;
 import matveyodintsov.weather.util.SessionInterceptor;
@@ -36,8 +34,8 @@ public class WeatherController {
     }
 
     @PostMapping("/find")
-    public String getWeather(@ModelAttribute("weather") WeatherData weatherData,
-                             @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId) {
+    public String createLocation(@ModelAttribute("weather") WeatherData weatherData,
+                                 @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId) {
 
         Users user = sessionInterceptor.getUserFromSession(sessionId);
         String city = weatherData.getCityName();
