@@ -1,4 +1,4 @@
-package matveyodintsov.weather.data;
+package matveyodintsov.weather.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

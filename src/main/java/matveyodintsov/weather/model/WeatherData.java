@@ -1,6 +1,4 @@
-package matveyodintsov.weather.data;
-
-import matveyodintsov.weather.model.Location;
+package matveyodintsov.weather.model;
 
 import java.math.BigDecimal;
 

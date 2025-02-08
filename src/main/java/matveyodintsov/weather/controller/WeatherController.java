@@ -1,6 +1,6 @@
 package matveyodintsov.weather.controller;
 
-import matveyodintsov.weather.data.WeatherData;
+import matveyodintsov.weather.model.WeatherData;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.WeatherService;
