@@ -1,6 +1,6 @@
 package matveyodintsov.weather.service;
 
-import matveyodintsov.weather.dto.UsersDto;
+import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public Users login(UsersDto userDto) throws AuthNotFoundException {
+    public Users login(UserRegistrationDto userDto) throws AuthNotFoundException {
         return userService.findByLoginAndPassword(userService.mapToUsers(userDto));
     }
 
-    public void register(UsersDto userDto) throws AuthNotFoundException {
+    public void register(UserRegistrationDto userDto) throws AuthNotFoundException {
         Users user = userService.mapToUsers(userDto);
         if (!userService.existsByLogin(user)) {
             userService.save(user);

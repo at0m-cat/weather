@@ -1,7 +1,7 @@
 package matveyodintsov.weather.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import matveyodintsov.weather.dto.UsersDto;
+import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.AuthService;
@@ -17,6 +17,11 @@ import java.util.UUID;
 @Controller
 @RequestMapping()
 public class AuthController {
+
+    //todo:
+    // UsersDto (только логин и ID)
+    // UsersRegistrationDto для регистрации (поля паролей) -> map to User -> save
+    // не использовать Users в сервисах, использовать UsersDto (id, login) -> создать маппер
 
     private final AuthService authService;
     private final SessionInterceptor sessionInterceptor;
@@ -38,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") UsersDto usersDto, HttpServletResponse response) {
+    public String login(@ModelAttribute("user") UserRegistrationDto usersDto, HttpServletResponse response) {
         try {
             Users user = authService.login(usersDto);
             sessionInterceptor.createSession(user, response);
@@ -49,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String doRegistration(@ModelAttribute("user") UsersDto user, Model model) {
+    public String doRegistration(@ModelAttribute("user") UserRegistrationDto user, Model model) {
         if (!user.getPassword().equals(user.getRepeatPassword())) {
             return "auth/registration-failed";
         }

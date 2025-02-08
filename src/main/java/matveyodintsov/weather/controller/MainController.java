@@ -1,6 +1,5 @@
 package matveyodintsov.weather.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.data.WeatherData;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Users;

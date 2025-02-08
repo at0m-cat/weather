@@ -1,6 +1,6 @@
 package matveyodintsov.weather.service;
 
-import matveyodintsov.weather.dto.UsersDto;
+import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.UserRepository;
@@ -40,7 +40,7 @@ public class UserService {
         return false;
     }
 
-    public Users mapToUsers(UsersDto usersDto) {
+    public Users mapToUsers(UserRegistrationDto usersDto) {
         Users users = new Users();
         users.setLogin(usersDto.getLogin().toLowerCase());
         users.setPassword(usersDto.getPassword());

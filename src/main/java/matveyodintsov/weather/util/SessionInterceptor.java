@@ -3,7 +3,7 @@ package matveyodintsov.weather.util;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import matveyodintsov.weather.dto.UsersDto;
+import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
@@ -70,7 +70,7 @@ public class SessionInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
-        model.addAttribute("user", new UsersDto());
+        model.addAttribute("user", new UserRegistrationDto());
         return false;
     }
 

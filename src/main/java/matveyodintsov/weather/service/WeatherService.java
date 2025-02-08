@@ -3,7 +3,6 @@ package matveyodintsov.weather.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import matveyodintsov.weather.data.WeatherApiConnect;
 import matveyodintsov.weather.data.WeatherData;
-import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;

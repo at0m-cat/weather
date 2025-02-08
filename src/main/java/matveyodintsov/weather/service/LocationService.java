@@ -1,7 +1,6 @@
 package matveyodintsov.weather.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
@@ -28,17 +27,13 @@ public class LocationService {
         }
     }
 
-    public Location findCityLocationInDataBase(String city, Users user)
-            throws LocationNotFoundDataBase, IncorrectCityNameValue {
-
+    public Location findCityLocationInDataBase(String city, Users user) throws LocationNotFoundDataBase {
         if (existsByName(city)) {
             return findByName(city);
         }
-
         if (existsByUserAndName(user, city)) {
             return findByUserAndName(user, city);
         }
-
         throw new LocationNotFoundDataBase("Location not found");
     }
 
