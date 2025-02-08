@@ -3,22 +3,25 @@ package matveyodintsov.weather.repository;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @EnableJpaRepositories
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     List<Location> findAllByUser(Users user);
 
-    Location findByUserAndName(Users user, String name);
+    @Query("SELECT (COUNT(l) > 0) FROM Location l WHERE l.user = :user AND l.name = :name")
+    boolean existsByUserAndName(@Param("user") Users user, @Param("name") String name);
 
-    Location findByName(String name);
+    Optional<Location> findByUserAndName(Users user, String name);
 
-    // todo: пересмотреть методы exist by !!
+    Optional<Location> findByName(String name);
 
-    boolean existsByUserAndName(Users user, String name);
-
-    boolean existsByName(String name);
+    @Query("select (count(l) > 0) from Location l where l.name =:name")
+    boolean existsByName(@Param("name") String name);
 }

@@ -1,34 +1,24 @@
 package matveyodintsov.weather.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import matveyodintsov.weather.data.WeatherApiConnect;
 import matveyodintsov.weather.data.WeatherData;
-import matveyodintsov.weather.dto.LocationDto;
-import matveyodintsov.weather.exeption.CityNotFoundException;
+import matveyodintsov.weather.exeption.IncorrectCityNameValue;
+import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import matveyodintsov.weather.model.Users;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class WeatherService {
 
-    //todo: реализовать поиск координат по названию города
-    //  реализовать метод поиска погоды по координатам
-    // распарсить json один раз (для поиска по координатам)
-    // поиск по названию города - отдать координаты в locationDto
-
     private final String key;
     private final String requestByCityUrl;
     private final String requestByLocationUrl;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final LocationService locationService;
 
     public WeatherService(@Value("${weather.api.key}") String apiKey,
@@ -41,83 +31,40 @@ public class WeatherService {
         this.locationService = locationService;
     }
 
-    public List<WeatherData> getDefaultWeatherData() {
-        List<WeatherData> weatherDataList = new ArrayList<>();
-        weatherDataList.add(getWeather("krasnoyarsk"));
-        weatherDataList.add(getWeather("zelenogorsk"));
-        weatherDataList.add(getWeather("moscow"));
-        weatherDataList.add(getWeather("санкт-петербург"));
-        return weatherDataList;
+    public void createLocation(String city, Users user) {
+        Location location;
+        try {
+            location = locationService.findCityLocationInDataBase(city, user);
+            location.setUser(user);
+        } catch (LocationNotFoundDataBase ignored) {
+            JsonNode node = WeatherApiConnect
+                    .getNode(urlFindLocation(city));
+            location = locationService.createLocation(node, user);
+        }
+        locationService.save(location);
     }
 
-    //todo: upd Ищем координаты по названию города,
-    // передаем координаты дальше в поиск погоды по координатам (придумать метод)
-
-    public Location findCityLocation(String city) {
-        String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
-        if (!city.matches(regex)) {
-            throw new CityNotFoundException("Incorrect city name: " + city);
+    public List<WeatherData> getWeatherFromUser(Users user) {
+        List<WeatherData> weatherData = new ArrayList<>();
+        List<Location> locations = locationService.findAllLocationsFromUser(user);
+        for (Location location : locations) {
+            weatherData.add(findWeather(location));
         }
-        if (locationService.existByName(city)) {
-            System.out.println("finded");
-            return locationService.findByName(city);
-
-        }
-
-        String url = requestByCityUrl
-                .replace("{city}", city)
-                .replace("{key}", key);
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
-            JsonNode node = objectMapper.readTree(response.getEntity().getContent());
-            if (response.getStatusLine().getStatusCode() != 200) {
-                throw new CityNotFoundException("Could not get weather data from " + city);
-            }
-            Location location = new Location();
-            location.setLongitude(node.get("coord").get("lon").decimalValue());
-            location.setLatitude(node.get("coord").get("lat").decimalValue());
-            location.setName(node.get("name").asText());
-            System.out.println(location);
-            return location;
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-
+        return weatherData;
     }
 
-
-
-
-
-    //todo: переделать - искать в локациях по имени,
-    // если есть - искать погоду по координатам,
-    // если нет - искать по городу, затем сохранить в базу название города
-    public WeatherData getWeather(String city) {
-        String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
-        if (!city.matches(regex)) {
-            throw new CityNotFoundException("Incorrect city name: " + city);
-        }
-
-        String url = requestByCityUrl
-                .replace("{city}", city)
-                .replace("{key}", key);
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
-            JsonNode node = objectMapper.readTree(response.getEntity().getContent());
-            if (response.getStatusLine().getStatusCode() != 200) {
-                throw new CityNotFoundException("Could not get weather data from " + city);
-            }
-            return mapJsonToWeatherData(node);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+    private WeatherData findWeather(Location location) {
+        JsonNode node = WeatherApiConnect
+                .getNode(urlFindCity(location.getLatitude().toString(), location.getLongitude().toString()));
+        WeatherData weatherData = mapToWeather(node);
+        weatherData.setLocation(location);
+        return weatherData;
     }
 
-    private WeatherData mapJsonToWeatherData(JsonNode node) {
+    private WeatherData mapToWeather(JsonNode node) {
+        System.out.println(node.toPrettyString());
         WeatherData weatherData = new WeatherData();
-        weatherData.setCityName(node.get("name").asText());
+        weatherData.setCityName(node.get("name").asText().toUpperCase());
         weatherData.setIconUrl(node.get("weather").get(0).get("icon").asText());
         weatherData.setTemperature(node.get("main").get("temp").decimalValue());
         weatherData.setDescription(node.get("weather").get(0).get("description").asText());
@@ -125,12 +72,20 @@ public class WeatherService {
         weatherData.setWindSpeed(node.get("wind").get("speed").decimalValue());
         weatherData.setHumidity(node.get("main").get("humidity").decimalValue());
         weatherData.setPressure(node.get("main").get("pressure").decimalValue());
-        LocationDto locationDto = new LocationDto();
-        locationDto.setLongitude(node.get("coord").get("lon").decimalValue());
-        locationDto.setLatitude(node.get("coord").get("lat").decimalValue());
-        locationDto.setName(node.get("name").asText());
-        weatherData.setLocation(locationDto);
         return weatherData;
+    }
+
+    private String urlFindLocation(String city) {
+        return requestByCityUrl
+                .replace("{city}", city)
+                .replace("{key}", key);
+    }
+
+    private String urlFindCity(String lat, String lon) {
+        return requestByLocationUrl
+                .replace("{lat}", lat)
+                .replace("{lon}", lon)
+                .replace("{key}", key);
     }
 }
 

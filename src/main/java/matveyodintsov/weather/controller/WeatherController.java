@@ -1,6 +1,7 @@
 package matveyodintsov.weather.controller;
 
 import matveyodintsov.weather.data.WeatherData;
+import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.LocationService;
@@ -18,13 +19,11 @@ public class WeatherController {
 
     SessionInterceptor sessionInterceptor;
     WeatherService weatherService;
-    LocationService locationService;
 
     @Autowired
-    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService weatherService, LocationService locationService) {
+    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService weatherService) {
         this.sessionInterceptor = sessionInterceptor;
         this.weatherService = weatherService;
-        this.locationService = locationService;
     }
 
     @GetMapping("/find")
@@ -38,21 +37,17 @@ public class WeatherController {
 
     @PostMapping("/find")
     public String getWeather(@ModelAttribute("weather") WeatherData weatherData,
-                             @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId,
-                             Model model) {
+                             @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId) {
 
         Users user = sessionInterceptor.getUserFromSession(sessionId);
-//        WeatherData weather = weatherService.getWeather(weatherData.getCityName());
-//        locationService.save(weather.getLocation(), user);
-//        locationService.findByName(weatherData.getCityName());
+        String city = weatherData.getCityName();
 
-        Location location = weatherService.findCityLocation(weatherData.getCityName());
-        locationService.save(location, user);
+        String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
+        if (!city.matches(regex)) {
+            throw new IncorrectCityNameValue("Incorrect city name: " + city);
+        }
 
-        // todo: найти город - записать координаты пользователю
-        //  ( у пользователя на главной странице вытаскивать погоду по координатам )
-
-//        model.addAttribute("weatherData", weatherService.getWeather(weatherData.getCityName()));
+        weatherService.createLocation(city, user);
         return "redirect:/";
     }
 

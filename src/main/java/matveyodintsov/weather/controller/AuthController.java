@@ -42,7 +42,7 @@ public class AuthController {
         try {
             Users user = authService.login(usersDto);
             sessionInterceptor.createSession(user, response);
-            return "index";
+            return "redirect:/";
         } catch (AuthNotFoundException e) {
             return "auth/login-failed";
         }

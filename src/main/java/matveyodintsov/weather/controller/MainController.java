@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping
 public class MainController {
@@ -32,33 +34,16 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String getMainPage(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId,
-                              HttpServletResponse response, Model model) {
+    public String getMainPage(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
 
         try {
             Users user = sessionInterceptor.getUserFromSession(sessionId);
-//            model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
+            List<WeatherData> weatherData = weatherService.getWeatherFromUser(user);
             model.addAttribute("user", user);
-//            model.addAttribute("weatherData", weatherData);
-
-
-            // todo: вытащить координаты городов у пользователя
-            //  сходить в сервис за списком погоды (поиск по координатам)
-
-
+            model.addAttribute("weatherData", weatherData);
             return "index";
         } catch (SessionNotFoundException e){
             return "redirect:/login";
         }
-
-//        model.addAttribute("user", user);
-//        return "index";
     }
-
-    @GetMapping("/default")
-    public String test(Model model) {
-        model.addAttribute("weatherData", weatherService.getDefaultWeatherData());
-        return "index";
-    }
-
 }

@@ -25,10 +25,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Users findByLogin(String login) {
-        return userRepository.findByLogin(login);
-    }
-
     public Users findByLoginAndPassword(Users user) throws AuthNotFoundException {
         Users foundUser = userRepository.findByLogin(user.getLogin());
         if (foundUser == null || !bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
