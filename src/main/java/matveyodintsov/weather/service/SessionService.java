@@ -18,7 +18,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
 
     @Autowired
-    public SessionService(SessionRepository sessionRepository, UserService userService) {
+    public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
 

@@ -6,7 +6,7 @@ import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.UserService;
 import matveyodintsov.weather.service.WeatherService;
-import matveyodintsov.weather.util.AppConst;
+import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +33,7 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String getMainPage(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
+    public String getMainPage(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, Model model) {
 
         try {
             Users user = sessionInterceptor.getUserFromSession(sessionId);

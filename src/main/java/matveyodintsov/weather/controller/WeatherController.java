@@ -4,7 +4,7 @@ import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.WeatherService;
-import matveyodintsov.weather.util.AppConst;
+import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class WeatherController {
     }
 
     @GetMapping("/find")
-    public String find(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
+    public String find(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, Model model) {
         if (!sessionInterceptor.isUserAuthenticated(sessionId, model)) {
             return "redirect:/login";
         }
@@ -41,12 +41,12 @@ public class WeatherController {
 
     @PostMapping("/find")
     public String createLocation(@ModelAttribute("weather") Weather weather,
-                                 @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId) {
+                                 @CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId) {
 
         Users userFromSession = sessionInterceptor.getUserFromSession(sessionId);
         String userInputCityName = weather.getCityName();
 
-        if (!userInputCityName.matches(AppConst.Validate.cityNameRegex)) {
+        if (!userInputCityName.matches(AppConfig.Validate.CITY_NAME_REGEX)) {
             throw new IncorrectCityNameValue("Incorrect city name: " + userInputCityName);
         }
 

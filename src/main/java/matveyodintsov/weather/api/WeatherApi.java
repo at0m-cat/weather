@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.exeption.CityNotFoundException;
 import matveyodintsov.weather.model.Weather;
+import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.Mapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -36,9 +37,9 @@ public class WeatherApi implements Api<Weather> {
     @Override
     public Weather getWeatherByLocation(String lat, String lon) {
         String url = findLocationByLocationUrl
-                .replace("{lat}", lat)
-                .replace("{lon}", lon)
-                .replace("{key}", key);
+                .replace(AppConfig.Constants.LATITUDE, lat)
+                .replace(AppConfig.Constants.LONGITUDE, lon)
+                .replace(AppConfig.Constants.KEY, key);
         JsonNode response = getNode(url);
         return Mapper.WeatherMapper.mapJsonToWeather(response);
     }
@@ -46,8 +47,8 @@ public class WeatherApi implements Api<Weather> {
     @Override
     public Weather getWeatherByCity(String city) {
         String url = findLocationByCityUrl
-                .replace("{city}", city)
-                .replace("{key}", key);
+                .replace(AppConfig.Constants.CITY, city)
+                .replace(AppConfig.Constants.KEY, key);
         JsonNode response = getNode(url);
         return Mapper.WeatherMapper.mapJsonToWeather(response);
     }
@@ -56,7 +57,7 @@ public class WeatherApi implements Api<Weather> {
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
              CloseableHttpResponse response = httpClient.execute(new HttpGet(url))) {
 
-            if (response.getStatusLine().getStatusCode() != 200) {
+            if (response.getStatusLine().getStatusCode() != AppConfig.HttpCode.OK) {
                 throw new CityNotFoundException("Could not get weather data, status: " + response.getStatusLine().getStatusCode());
             }
 

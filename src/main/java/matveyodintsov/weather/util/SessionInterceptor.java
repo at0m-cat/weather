@@ -109,7 +109,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             return null;
         }
         for (Cookie cookie : request.getCookies()) {
-            if (AppConst.Constants.sessionID.equals(cookie.getName())) {
+            if (AppConfig.Constants.SESSION_ID.equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }
@@ -117,7 +117,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
 
     private void addSessionCookie(HttpServletResponse response, Sessions session) {
-        Cookie cookie = new Cookie(AppConst.Constants.sessionID, session.getId().toString());
+        Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, session.getId().toString());
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -131,7 +131,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
 
     private void removeSessionCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie(AppConst.Constants.sessionID, "");
+        Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, "");
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
         cookie.setPath("/");

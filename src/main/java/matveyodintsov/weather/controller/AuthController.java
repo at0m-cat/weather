@@ -5,7 +5,7 @@ import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.AuthService;
-import matveyodintsov.weather.util.AppConst;
+import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,12 +33,12 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String auth(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
+    public String auth(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, Model model) {
         return sessionInterceptor.isUserAuthenticated(sessionId, model) ? "index" : "auth/auth";
     }
 
     @GetMapping("/registration")
-    public String registration(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, Model model) {
+    public String registration(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, Model model) {
         return sessionInterceptor.isUserAuthenticated(sessionId, model) ? "index" : "auth/registration";
     }
 
@@ -58,19 +58,17 @@ public class AuthController {
         if (!user.getPassword().equals(user.getRepeatPassword())) {
             return "auth/registration-failed";
         }
-
         try {
             authService.register(user);
+            model.addAttribute("message", "Registration successful!");
+            return "auth/registration-successfully";
         } catch (Exception e) {
             return "auth/registration-failed";
         }
-
-        model.addAttribute("message", "Registration successful!");
-        return "auth/registration-successfully";
     }
 
     @PostMapping("/logout")
-    public String logout(@CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId, HttpServletResponse response) {
+    public String logout(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, HttpServletResponse response) {
         if (sessionId != null) {
             sessionInterceptor.deleteSession(UUID.fromString(sessionId), response);
         }
