@@ -1,8 +1,9 @@
 package matveyodintsov.weather.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import matveyodintsov.weather.util.WeatherApiConnect;
-import matveyodintsov.weather.model.WeatherData;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import matveyodintsov.weather.model.Weather;
+import matveyodintsov.weather.util.WeatherApi;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
@@ -16,17 +17,17 @@ import java.util.List;
 public class WeatherService {
 
     private final String key;
-    private final String requestByCityUrl;
-    private final String requestByLocationUrl;
+    private final String findLocationByCity;
+    private final String findCityByLocation;
     private final LocationService locationService;
 
     public WeatherService(@Value("${weather.api.key}") String apiKey,
-                          @Value("${weather.url.geo}") String requestByCityUrl,
-                          @Value("${weather.url.weather}") String weatherApiUrl,
+                          @Value("${weather.url.geo}") String findLocationByCity,
+                          @Value("${weather.url.weather}") String findCityByLocation,
                           LocationService locationService) {
         this.key = apiKey;
-        this.requestByCityUrl = requestByCityUrl;
-        this.requestByLocationUrl = weatherApiUrl;
+        this.findLocationByCity = findLocationByCity;
+        this.findCityByLocation = findCityByLocation;
         this.locationService = locationService;
     }
 
@@ -36,52 +37,43 @@ public class WeatherService {
             location = locationService.findCityLocationInDataBase(city, user);
             location.setUser(user);
         } catch (LocationNotFoundDataBase ignored) {
-            JsonNode node = WeatherApiConnect
-                    .getNode(urlFindLocation(city));
+            JsonNode node = WeatherApi
+                    .getNode(findLocationByCityName(city));
             location = locationService.createLocation(node, user);
         }
         locationService.save(location);
     }
 
-    public List<WeatherData> getWeatherFromUser(Users user) {
-        List<WeatherData> weatherData = new ArrayList<>();
+    public List<Weather> getWeatherFromUser(Users user) {
+        List<Weather> weatherList = new ArrayList<>();
         List<Location> locations = locationService.findAllLocationsFromUser(user);
         for (Location location : locations) {
-            weatherData.add(findWeather(location));
+            Weather weather = findWeatherByLocation(location);
+            weatherList.add(weather);
         }
-        return weatherData;
+        return weatherList;
     }
 
-    private WeatherData findWeather(Location location) {
-        JsonNode node = WeatherApiConnect
-                .getNode(urlFindCity(location.getLatitude().toString(), location.getLongitude().toString()));
-        WeatherData weatherData = mapToWeather(node);
-        weatherData.setLocation(location);
-        return weatherData;
+    private Weather findWeatherByLocation(Location location) {
+        JsonNode node = WeatherApi
+                .getNode(findCityByLocation(location.getLatitude().toString(), location.getLongitude().toString()));
+        Weather weather = mapJsonToWeather(node);
+        weather.setLocation(location);
+        return weather;
     }
 
-    private WeatherData mapToWeather(JsonNode node) {
-        System.out.println(node.toPrettyString());
-        WeatherData weatherData = new WeatherData();
-        weatherData.setCityName(node.get("name").asText().toUpperCase());
-        weatherData.setIconUrl(node.get("weather").get(0).get("icon").asText());
-        weatherData.setTemperature(node.get("main").get("temp").decimalValue());
-        weatherData.setDescription(node.get("weather").get(0).get("description").asText());
-        weatherData.setFeelsLike(node.get("main").get("feels_like").decimalValue());
-        weatherData.setWindSpeed(node.get("wind").get("speed").decimalValue());
-        weatherData.setHumidity(node.get("main").get("humidity").decimalValue());
-        weatherData.setPressure(node.get("main").get("pressure").decimalValue());
-        return weatherData;
+    private Weather mapJsonToWeather(JsonNode node) {
+        return WeatherApi.mapToWeather(node);
     }
 
-    private String urlFindLocation(String city) {
-        return requestByCityUrl
+    private String findLocationByCityName(String city) {
+        return findLocationByCity
                 .replace("{city}", city)
                 .replace("{key}", key);
     }
 
-    private String urlFindCity(String lat, String lon) {
-        return requestByLocationUrl
+    private String findCityByLocation(String lat, String lon) {
+        return findCityByLocation
                 .replace("{lat}", lat)
                 .replace("{lon}", lon)
                 .replace("{key}", key);

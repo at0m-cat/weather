@@ -1,6 +1,6 @@
 package matveyodintsov.weather.controller;
 
-import matveyodintsov.weather.model.WeatherData;
+import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.LocationService;
@@ -37,9 +37,9 @@ public class MainController {
 
         try {
             Users user = sessionInterceptor.getUserFromSession(sessionId);
-            List<WeatherData> weatherData = weatherService.getWeatherFromUser(user);
+            List<Weather> weather = weatherService.getWeatherFromUser(user);
             model.addAttribute("user", user);
-            model.addAttribute("weatherData", weatherData);
+            model.addAttribute("weather", weather);
             return "index";
         } catch (SessionNotFoundException e){
             return "redirect:/login";

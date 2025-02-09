@@ -1,6 +1,6 @@
 package matveyodintsov.weather.controller;
 
-import matveyodintsov.weather.model.WeatherData;
+import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.WeatherService;
@@ -35,16 +35,16 @@ public class WeatherController {
         if (!sessionInterceptor.isUserAuthenticated(sessionId, model)) {
             return "redirect:/login";
         }
-        model.addAttribute("weather", new WeatherData());
+        model.addAttribute("weather", new Weather());
         return "weather/add-weather";
     }
 
     @PostMapping("/find")
-    public String createLocation(@ModelAttribute("weather") WeatherData weatherData,
+    public String createLocation(@ModelAttribute("weather") Weather weather,
                                  @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId) {
 
         Users user = sessionInterceptor.getUserFromSession(sessionId);
-        String city = weatherData.getCityName();
+        String city = weather.getCityName();
 
         String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
         if (!city.matches(regex)) {
