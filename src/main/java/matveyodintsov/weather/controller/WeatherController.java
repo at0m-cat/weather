@@ -43,15 +43,14 @@ public class WeatherController {
     public String createLocation(@ModelAttribute("weather") Weather weather,
                                  @CookieValue(value = AppConst.Constants.sessionID, required = false) String sessionId) {
 
-        Users user = sessionInterceptor.getUserFromSession(sessionId);
-        String city = weather.getCityName();
+        Users userFromSession = sessionInterceptor.getUserFromSession(sessionId);
+        String userInputCityName = weather.getCityName();
 
-        String regex = "^(?!\\s)[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$";
-        if (!city.matches(regex)) {
-            throw new IncorrectCityNameValue("Incorrect city name: " + city);
+        if (!userInputCityName.matches(AppConst.Validate.cityNameRegex)) {
+            throw new IncorrectCityNameValue("Incorrect city name: " + userInputCityName);
         }
 
-        weatherService.createLocation(city, user);
+        weatherService.insertUserLocation(userInputCityName, userFromSession);
         return "redirect:/";
     }
 

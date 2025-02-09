@@ -27,7 +27,7 @@ public class SessionService {
                 .orElseThrow(() -> new SessionNotFoundException("Session not found"));
     }
 
-    public void deleteSession(UUID sessionId) throws SessionNotFoundException {
+    public void deleteIfExistSession(UUID sessionId) throws SessionNotFoundException {
         if (sessionRepository.existsById(sessionId)) {
             sessionRepository.deleteById(sessionId);
         } else {
@@ -35,7 +35,7 @@ public class SessionService {
         }
     }
 
-    public void updateSession(Sessions session) {
+    public void updateOrSaveSession(Sessions session) {
         sessionRepository.save(session);
     }
 
@@ -45,7 +45,8 @@ public class SessionService {
         return sessionRepository.deleteByCreatedAtBefore(calendar.getTime());
     }
 
-    public Sessions createSession(Users user) {
+    //todo: убрать проверку на null
+    public Sessions insertUserSession(Users user) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 1);
         Sessions session = sessionRepository.findByUserId(user);

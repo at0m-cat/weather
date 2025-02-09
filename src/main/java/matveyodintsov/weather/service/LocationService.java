@@ -1,6 +1,7 @@
 package matveyodintsov.weather.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
@@ -35,15 +36,6 @@ public class LocationService {
             return findByUserAndName(user, city);
         }
         throw new LocationNotFoundDataBase("Location not found");
-    }
-
-    public Location createLocation (JsonNode node, Users user) {
-        Location location = new Location();
-        location.setName(node.get("name").asText().toUpperCase());
-        location.setLongitude(node.get("coord").get("lon").decimalValue());
-        location.setLatitude(node.get("coord").get("lat").decimalValue());
-        location.setUser(user);
-        return location;
     }
 
     public List<Location> findAllLocationsFromUser(Users user) {

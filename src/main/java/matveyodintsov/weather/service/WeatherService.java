@@ -1,13 +1,12 @@
 package matveyodintsov.weather.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import matveyodintsov.weather.model.Weather;
-import matveyodintsov.weather.util.Mapper;
-import matveyodintsov.weather.util.WeatherApi;
+import matveyodintsov.weather.api.Api;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
-import org.springframework.beans.factory.annotation.Value;
+import matveyodintsov.weather.model.Weather;
+import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,35 +15,24 @@ import java.util.List;
 @Service
 public class WeatherService {
 
-    private final String key;
-    private final String findLocationByCity;
-    private final String findCityByLocation;
     private final LocationService locationService;
+    private final Api<Weather> weatherApi;
 
-    public WeatherService(@Value("${weather.api.key}") String apiKey,
-                          @Value("${weather.url.geo}") String findLocationByCity,
-                          @Value("${weather.url.weather}") String findCityByLocation,
-                          LocationService locationService) {
-        this.key = apiKey;
-        this.findLocationByCity = findLocationByCity;
-        this.findCityByLocation = findCityByLocation;
+    @Autowired
+    public WeatherService(LocationService locationService, Api<Weather> weatherApi) {
         this.locationService = locationService;
+        this.weatherApi = weatherApi;
     }
 
-    public void createLocation(String city, Users user) {
-        Location location;
+    public void insertUserLocation(String city, Users user) {
         try {
-            location = locationService.findCityLocationInDataBase(city, user);
-            location.setUser(user);
+            findLocationAndSaveUser(city, user);
         } catch (LocationNotFoundDataBase ignored) {
-            JsonNode node = WeatherApi
-                    .getNode(findLocationByCityName(city));
-            location = locationService.createLocation(node, user);
+            findWeatherByCityNameAndSaveUserLocation(city, user);
         }
-        locationService.save(location);
     }
 
-    public List<Weather> getWeatherFromUser(Users user) {
+    public List<Weather> getUserWeathers(Users user) {
         List<Weather> weatherList = new ArrayList<>();
         List<Location> locations = locationService.findAllLocationsFromUser(user);
         for (Location location : locations) {
@@ -54,29 +42,27 @@ public class WeatherService {
         return weatherList;
     }
 
+    private void findLocationAndSaveUser(String city, Users user) {
+        Location location = locationService.findCityLocationInDataBase(city, user);
+        saveUserToLocation(user, location);
+    }
+
+    private void findWeatherByCityNameAndSaveUserLocation(String city, Users user) {
+        Weather weather = weatherApi.getWeatherByCity(city);
+        Location location = weather.getLocation();
+        saveUserToLocation(user, location);
+    }
+
+    private void saveUserToLocation(Users user, Location location) {
+        location.setUser(user);
+        locationService.save(location);
+    }
+
     private Weather findWeatherByLocation(Location location) {
-        JsonNode node = WeatherApi
-                .getNode(findCityByLocation(location.getLatitude().toString(), location.getLongitude().toString()));
-        Weather weather = mapJsonToWeather(node);
-        weather.setLocation(location);
-        return weather;
-    }
+        String latitude = location.getLatitude().toString();
+        String longitude = location.getLongitude().toString();
 
-    private Weather mapJsonToWeather(JsonNode node) {
-        return Mapper.WeatherMapper.mapJsonToWeather(node);
-    }
-
-    private String findLocationByCityName(String city) {
-        return findLocationByCity
-                .replace("{city}", city)
-                .replace("{key}", key);
-    }
-
-    private String findCityByLocation(String lat, String lon) {
-        return findCityByLocation
-                .replace("{lat}", lat)
-                .replace("{lon}", lon)
-                .replace("{key}", key);
+        return weatherApi.getWeatherByLocation(latitude, longitude);
     }
 }
 

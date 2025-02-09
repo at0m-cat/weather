@@ -11,6 +11,7 @@ import matveyodintsov.weather.model.Weather;
 public class Mapper {
 
     public static class WeatherMapper {
+
         public static Weather mapJsonToWeather(JsonNode node) {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -37,7 +38,7 @@ public class Mapper {
 
         public static Users mapUsersRegistrationDtoToUser(UserRegistrationDto dto) {
             Users user = new Users();
-            user.setLogin(dto.getLogin());
+            user.setLogin(dto.getLogin().toLowerCase());
             user.setPassword(dto.getPassword());
             return user;
         }

@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.dto.UserRegistrationDto;
+import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
@@ -57,25 +58,26 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
 
     public void createSession(Users user, HttpServletResponse response) {
-        Sessions session = sessionService.createSession(user);
+        Sessions session = sessionService.insertUserSession(user);
         addSessionCookie(response, session);
         logger.info("Создана новая сессия для пользователя ID: {}", user.getId());
     }
 
+    //todo: убрать проверку на null
+    // разбить метод на несколько
     public boolean isUserAuthenticated(String sessionId, Model model) {
         if (sessionId != null) {
             Users user = getUserFromSession(sessionId);
-            if (user != null) {
-                model.addAttribute("user", user);
-                return true;
-            }
+            UsersDto usersDto = Mapper.UserMapper.mapUsersToUsersDto(user);
+            model.addAttribute("user", usersDto);
+            return true;
         }
         model.addAttribute("user", new UserRegistrationDto());
         return false;
     }
 
     public void deleteSession(UUID sessionUuid, HttpServletResponse response) {
-        sessionService.deleteSession(sessionUuid);
+        sessionService.deleteIfExistSession(sessionUuid);
         removeSessionCookie(response);
         logger.info("Сессия истекла и удалена: {}", sessionUuid);
     }
@@ -97,7 +99,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 1);
         session.setExpiresat(calendar.getTime());
-        sessionService.updateSession(session);
+        sessionService.updateOrSaveSession(session);
         updateSessionCookie(response, session);
         logger.info("Сессия продлена. Пользователь ID: {}", session.getUserId().getId());
     }

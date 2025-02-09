@@ -43,12 +43,11 @@ public class Weather {
         this.windSpeed = BigDecimal.valueOf(wind.get("speed").asDouble());
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+    @JsonProperty("coord")
+    public void setLocation(JsonNode coord) {
+        this.location = new Location();
+        this.location.setLatitude(coord.get("lat").decimalValue());
+        this.location.setLongitude(coord.get("lon").decimalValue());
     }
 
     public String getCityName() {

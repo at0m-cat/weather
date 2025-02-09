@@ -40,10 +40,10 @@ public class UserService {
         return false;
     }
 
-    public Users mapToUsers(UserRegistrationDto usersDto) {
-        Users users = new Users();
-        users.setLogin(usersDto.getLogin().toLowerCase());
-        users.setPassword(usersDto.getPassword());
-        return users;
-    }
+//    public Users mapToUsers(UserRegistrationDto usersDto) {
+//        Users users = new Users();
+//        users.setLogin(usersDto.getLogin().toLowerCase());
+//        users.setPassword(usersDto.getPassword());
+//        return users;
+//    }
 }

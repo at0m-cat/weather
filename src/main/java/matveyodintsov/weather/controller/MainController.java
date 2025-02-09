@@ -37,9 +37,9 @@ public class MainController {
 
         try {
             Users user = sessionInterceptor.getUserFromSession(sessionId);
-            List<Weather> weather = weatherService.getWeatherFromUser(user);
+            List<Weather> weatherList = weatherService.getUserWeathers(user);
             model.addAttribute("user", user);
-            model.addAttribute("weather", weather);
+            model.addAttribute("weather", weatherList);
             return "index";
         } catch (SessionNotFoundException e){
             return "redirect:/login";
