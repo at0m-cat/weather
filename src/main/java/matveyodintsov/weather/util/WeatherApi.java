@@ -30,12 +30,5 @@ public class WeatherApi {
         }
     }
 
-    public static Weather mapToWeather(JsonNode node) {
-        try {
-            return objectMapper.treeToValue(node, Weather.class);
-        } catch (Exception e) {
-            throw new CityNotFoundException("Weather data could not be parsed");
-        }
-    }
 
 }

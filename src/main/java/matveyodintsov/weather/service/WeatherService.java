@@ -1,8 +1,8 @@
 package matveyodintsov.weather.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.model.Weather;
+import matveyodintsov.weather.util.Mapper;
 import matveyodintsov.weather.util.WeatherApi;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
@@ -63,7 +63,7 @@ public class WeatherService {
     }
 
     private Weather mapJsonToWeather(JsonNode node) {
-        return WeatherApi.mapToWeather(node);
+        return Mapper.WeatherMapper.mapJsonToWeather(node);
     }
 
     private String findLocationByCityName(String city) {
