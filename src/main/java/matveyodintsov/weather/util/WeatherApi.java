@@ -11,6 +11,7 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 
+
 public class WeatherApi {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
