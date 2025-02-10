@@ -5,7 +5,8 @@ import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.model.Weather;
-import org.apache.catalina.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class WeatherService {
 
     private final LocationService locationService;
     private final Api<Weather> weatherApi;
+    private static final Logger logger = LoggerFactory.getLogger(WeatherService.class);
 
     @Autowired
     public WeatherService(LocationService locationService, Api<Weather> weatherApi) {
@@ -50,6 +52,7 @@ public class WeatherService {
     private void findWeatherByCityNameAndSaveUserLocation(String city, Users user) {
         Weather weather = weatherApi.getWeatherByCity(city);
         Location location = weather.getLocation();
+        location.setName(weather.getCityName());
         saveUserToLocation(user, location);
     }
 

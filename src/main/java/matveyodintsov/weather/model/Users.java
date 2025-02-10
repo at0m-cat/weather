@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class Users implements Account {
 
     public Users() {
     }

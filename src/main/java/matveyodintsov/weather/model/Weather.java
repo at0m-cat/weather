@@ -54,6 +54,9 @@ public class Weather {
         return cityName;
     }
 
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
 
     public String getIconUrl() {
         return iconUrl;

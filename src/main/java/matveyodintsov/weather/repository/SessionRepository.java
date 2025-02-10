@@ -1,6 +1,7 @@
 package matveyodintsov.weather.repository;
 
 import jakarta.transaction.Transactional;
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;

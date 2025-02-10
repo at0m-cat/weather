@@ -6,6 +6,8 @@ import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +23,9 @@ public class WeatherController {
     // создать лимит добавления погоды (5 городов)
     // создать удаление погоды
 
-    SessionInterceptor sessionInterceptor;
-    WeatherService weatherService;
+    private final SessionInterceptor sessionInterceptor;
+    private final WeatherService weatherService;
+    private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
 
     @Autowired
     public WeatherController(SessionInterceptor sessionInterceptor, WeatherService weatherService) {

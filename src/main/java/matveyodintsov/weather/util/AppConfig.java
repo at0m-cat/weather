@@ -1,5 +1,8 @@
 package matveyodintsov.weather.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class AppConfig {
 
     public static final class Constants {

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.SessionService;

@@ -1,11 +1,11 @@
 package matveyodintsov.weather.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.LocationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,7 @@ import java.util.List;
 public class LocationService {
 
     private final LocationRepository locationRepository;
+    private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
 
     @Autowired
     public LocationService(LocationRepository locationRepository) {

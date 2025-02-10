@@ -1,6 +1,8 @@
 package matveyodintsov.weather.dto;
 
-public class UsersDto {
+import matveyodintsov.weather.model.Account;
+
+public class UsersDto implements Account {
     private String login;
 
     public String getLogin() {
