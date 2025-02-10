@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import matveyodintsov.weather.exeption.CityNotFoundException;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.util.AppConfig;
-import matveyodintsov.weather.util.Mapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -41,7 +40,7 @@ public class WeatherApi implements Api<Weather> {
                 .replace(AppConfig.Constants.LONGITUDE, lon)
                 .replace(AppConfig.Constants.KEY, key);
         JsonNode response = getNode(url);
-        return Mapper.WeatherMapper.mapJsonToWeather(response);
+        return mapJsonToWeather(response);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class WeatherApi implements Api<Weather> {
                 .replace(AppConfig.Constants.CITY, city)
                 .replace(AppConfig.Constants.KEY, key);
         JsonNode response = getNode(url);
-        return Mapper.WeatherMapper.mapJsonToWeather(response);
+        return mapJsonToWeather(response);
     }
 
     private JsonNode getNode(String url) {
@@ -65,6 +64,14 @@ public class WeatherApi implements Api<Weather> {
 
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private Weather mapJsonToWeather(JsonNode node) {
+        try {
+            return objectMapper.treeToValue(node, Weather.class);
+        } catch (Exception e) {
+            throw new CityNotFoundException("Weather data could not be parsed");
         }
     }
 
