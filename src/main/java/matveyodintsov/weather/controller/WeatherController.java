@@ -3,7 +3,6 @@ package matveyodintsov.weather.controller;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
-import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
@@ -25,11 +24,11 @@ public class WeatherController {
     // создать удаление погоды
 
     private final SessionInterceptor sessionInterceptor;
-    private final WeatherService weatherService;
+    private final WeatherService<Weather, Account> weatherService;
     private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
 
     @Autowired
-    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService weatherService) {
+    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService<Weather, Account> weatherService) {
         this.sessionInterceptor = sessionInterceptor;
         this.weatherService = weatherService;
     }

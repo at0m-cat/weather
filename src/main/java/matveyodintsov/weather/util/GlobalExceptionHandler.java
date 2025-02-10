@@ -1,4 +1,4 @@
-package matveyodintsov.weather.exeption;
+package matveyodintsov.weather.util;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;

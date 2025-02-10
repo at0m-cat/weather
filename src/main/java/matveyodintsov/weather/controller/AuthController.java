@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Account;
-import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.AuthService;
 import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
@@ -24,11 +23,11 @@ public class AuthController {
     // UsersRegistrationDto для регистрации (поля паролей) -> map to User -> save
     // не использовать Users в сервисах, использовать UsersDto (id, login) -> создать маппер
 
-    private final AuthService authService;
+    private final AuthService<Account> authService;
     private final SessionInterceptor sessionInterceptor;
 
     @Autowired
-    public AuthController(AuthService authService, SessionInterceptor sessionInterceptor) {
+    public AuthController(AuthService<Account> authService, SessionInterceptor sessionInterceptor) {
         this.authService = authService;
         this.sessionInterceptor = sessionInterceptor;
     }

@@ -1,63 +1,16 @@
 package matveyodintsov.weather.service;
-
-import matveyodintsov.weather.exeption.SessionNotFoundException;
-import matveyodintsov.weather.model.Account;
-import matveyodintsov.weather.model.Sessions;
-import matveyodintsov.weather.model.Users;
-import matveyodintsov.weather.repository.SessionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
-import java.util.Optional;
 import java.util.UUID;
 
+public interface SessionService<T, K> {
 
-@Service
-public class SessionService {
+    public T find(UUID sessionId);
 
-    private final SessionRepository sessionRepository;
+    public void deleteIfExistSession(UUID sessionId);
 
-    @Autowired
-    public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
-    }
+    public void updateOrSaveSession(T session);
 
-    public Sessions find(UUID sessionId) throws SessionNotFoundException {
-        return Optional.ofNullable(sessionRepository.findBySessionId(sessionId))
-                .orElseThrow(() -> new SessionNotFoundException("Session not found"));
-    }
+    public int deleteOldSession();
 
-    public void deleteIfExistSession(UUID sessionId) throws SessionNotFoundException {
-        if (sessionRepository.existsById(sessionId)) {
-            sessionRepository.deleteById(sessionId);
-        } else {
-            throw new SessionNotFoundException("Session not found");
-        }
-    }
-
-    public void updateOrSaveSession(Sessions session) {
-        sessionRepository.save(session);
-    }
-
-    public int deleteOldSession() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, -1);
-        return sessionRepository.deleteByCreatedAtBefore(calendar.getTime());
-    }
-
-    //todo: убрать проверку на null
-    public Sessions insertUserSession(Account user) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, 1);
-        Sessions session = sessionRepository.findByUserId(user);
-        if (session == null) {
-            session = new Sessions();
-            session.setUserId((Users) user);
-            session.setExpiresat(calendar.getTime());
-        }
-        session.setExpiresat(calendar.getTime());
-        return sessionRepository.save(session);
-    }
+    public T insertUserSession(K user);
 
 }

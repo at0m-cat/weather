@@ -3,8 +3,6 @@ package matveyodintsov.weather.controller;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
-import matveyodintsov.weather.model.Users;
-import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.UserService;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConfig;
@@ -20,17 +18,15 @@ import java.util.List;
 @RequestMapping
 public class MainController {
 
-    UserService userService;
-    WeatherService weatherService;
+    UserService<Account> userService;
+    WeatherService<Weather, Account> weatherService;
     SessionInterceptor sessionInterceptor;
-    LocationService locationService;
 
     @Autowired
-    public MainController(UserService userService, WeatherService weatherService, SessionInterceptor sessionInterceptor, LocationService locationService) {
+    public MainController(UserService<Account> userService, WeatherService<Weather, Account> weatherService, SessionInterceptor sessionInterceptor) {
         this.userService = userService;
         this.weatherService = weatherService;
         this.sessionInterceptor = sessionInterceptor;
-        this.locationService = locationService;
     }
 
     @GetMapping("/")

@@ -8,8 +8,10 @@ import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.service.SessionService;
+import matveyodintsov.weather.service.impl.SessionServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,9 +24,10 @@ import java.util.UUID;
 public class SessionInterceptor implements HandlerInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionInterceptor.class);
-    private final SessionService sessionService;
+    private final SessionService<Sessions, Account> sessionService;
 
-    public SessionInterceptor(SessionService sessionService) {
+    @Autowired
+    public SessionInterceptor(SessionService<Sessions, Account> sessionService) {
         this.sessionService = sessionService;
     }
 
