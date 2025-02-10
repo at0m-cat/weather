@@ -1,5 +1,6 @@
 package matveyodintsov.weather.service;
 
+import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Sessions;
@@ -54,6 +55,7 @@ public class SessionService {
         if (session == null) {
             session = new Sessions();
             session.setUserId((Users) user);
+            session.getUserId().setPassword("");
             session.setExpiresat(calendar.getTime());
         }
         session.setExpiresat(calendar.getTime());

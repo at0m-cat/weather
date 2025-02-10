@@ -1,9 +1,7 @@
 package matveyodintsov.weather.repository;
 
-import matveyodintsov.weather.dto.UsersDto;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Location;
-import matveyodintsov.weather.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

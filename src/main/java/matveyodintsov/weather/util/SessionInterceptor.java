@@ -69,7 +69,6 @@ public class SessionInterceptor implements HandlerInterceptor {
     public boolean isUserAuthenticated(String sessionId, Model model) {
         if (sessionId != null) {
             Account user = getUserFromSession(sessionId);
-//            UsersDto usersDto = Mapper.UserMapper.mapUsersToUsersDto(user);
             model.addAttribute("user", user);
             return true;
         }

@@ -1,6 +1,5 @@
 package matveyodintsov.weather.service;
 
-import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Users;
@@ -22,10 +21,10 @@ public class UserService {
     }
 
     public void save(Account user) {
-        Users saveUser = new Users();
+        Users saveUser;
+        saveUser = new Users();
         saveUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         saveUser.setLogin(user.getLogin());
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(saveUser);
     }
 
