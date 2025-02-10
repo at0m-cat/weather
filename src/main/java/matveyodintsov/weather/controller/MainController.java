@@ -1,5 +1,6 @@
 package matveyodintsov.weather.controller;
 
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Users;
@@ -36,7 +37,7 @@ public class MainController {
     public String getMainPage(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, Model model) {
 
         try {
-            Users user = sessionInterceptor.getUserFromSession(sessionId);
+            Account user = sessionInterceptor.getUserFromSession(sessionId);
             List<Weather> weatherList = weatherService.getUserWeathers(user);
             model.addAttribute("user", user);
             model.addAttribute("weather", weatherList);

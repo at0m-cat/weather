@@ -3,6 +3,7 @@ package matveyodintsov.weather.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.service.AuthService;
 import matveyodintsov.weather.util.AppConfig;
@@ -45,7 +46,7 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@ModelAttribute("user") UserRegistrationDto usersDto, HttpServletResponse response) {
         try {
-            Users user = authService.login(usersDto);
+            Account user = authService.login(usersDto);
             sessionInterceptor.createSession(user, response);
             return "redirect:/";
         } catch (AuthNotFoundException e) {

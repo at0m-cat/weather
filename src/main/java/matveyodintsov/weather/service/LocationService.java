@@ -1,6 +1,7 @@
 package matveyodintsov.weather.service;
 
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.LocationRepository;
@@ -29,7 +30,7 @@ public class LocationService {
         }
     }
 
-    public Location findCityLocationInDataBase(String city, Users user) throws LocationNotFoundDataBase {
+    public Location findCityLocationInDataBase(String city, Account user) throws LocationNotFoundDataBase {
         if (existsByName(city)) {
             return findByName(city);
         }
@@ -39,11 +40,11 @@ public class LocationService {
         throw new LocationNotFoundDataBase("Location not found");
     }
 
-    public List<Location> findAllLocationsFromUser(Users user) {
+    public List<Location> findAllLocationsFromUser(Account user) {
         return locationRepository.findAllByUser(user);
     }
 
-    private boolean existsByUserAndName(Users user, String name) {
+    private boolean existsByUserAndName(Account user, String name) {
         return locationRepository.existsByUserAndName(user, name.toUpperCase());
     }
 
@@ -51,7 +52,7 @@ public class LocationService {
         return locationRepository.existsByName(name.toUpperCase());
     }
 
-    private Location findByUserAndName(Users user, String name) {
+    private Location findByUserAndName(Account user, String name) {
         return locationRepository.findByUserAndName(user, name.toUpperCase())
                 .orElseThrow(() -> new LocationNotFoundDataBase("City not found in DB: " + name));
     }

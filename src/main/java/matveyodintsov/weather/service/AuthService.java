@@ -18,15 +18,13 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public Users login(UserRegistrationDto userDto) throws AuthNotFoundException {
-        Users loggedUser = Mapper.UserMapper.mapUsersRegistrationDtoToUser(userDto);
-        return userService.findByLoginAndPassword(loggedUser);
+    public Account login(Account userDto) throws AuthNotFoundException {
+        return userService.findByLoginAndPassword(userDto);
     }
 
-    public void register(UserRegistrationDto userDto) throws AuthNotFoundException {
-        Users newUser = Mapper.UserMapper.mapUsersRegistrationDtoToUser(userDto);
-        if (!userService.existsByLogin(newUser)) {
-            userService.save(newUser);
+    public void register(Account userDto) throws AuthNotFoundException {
+        if (!userService.existsByLogin(userDto)) {
+            userService.save(userDto);
         }
     }
 }

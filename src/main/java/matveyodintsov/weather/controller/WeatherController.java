@@ -1,5 +1,6 @@
 package matveyodintsov.weather.controller;
 
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
 import matveyodintsov.weather.model.Users;
@@ -46,7 +47,7 @@ public class WeatherController {
     public String createLocation(@ModelAttribute("weather") Weather weather,
                                  @CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId) {
 
-        Users userFromSession = sessionInterceptor.getUserFromSession(sessionId);
+        Account userFromSession = sessionInterceptor.getUserFromSession(sessionId);
         String userInputCityName = weather.getCityName();
 
         if (!userInputCityName.matches(AppConfig.Validate.CITY_NAME_REGEX)) {

@@ -32,7 +32,7 @@ public class Sessions {
         this.id = id;
     }
 
-    public Users getUserId() {
+    public Account getUserId() {
         return userId;
     }
 

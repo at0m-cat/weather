@@ -9,6 +9,16 @@ public class UsersDto implements Account {
         return login;
     }
 
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    public void setPassword(String password) {
+
+    }
+
     public void setLogin(String login) {
         this.login = login;
     }

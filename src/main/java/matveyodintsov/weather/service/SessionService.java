@@ -1,6 +1,7 @@
 package matveyodintsov.weather.service;
 
 import matveyodintsov.weather.exeption.SessionNotFoundException;
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.SessionRepository;
@@ -46,13 +47,13 @@ public class SessionService {
     }
 
     //todo: убрать проверку на null
-    public Sessions insertUserSession(Users user) {
+    public Sessions insertUserSession(Account user) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 1);
         Sessions session = sessionRepository.findByUserId(user);
         if (session == null) {
             session = new Sessions();
-            session.setUserId(user);
+            session.setUserId((Users) user);
             session.setExpiresat(calendar.getTime());
         }
         session.setExpiresat(calendar.getTime());

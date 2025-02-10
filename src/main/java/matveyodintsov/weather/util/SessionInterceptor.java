@@ -58,19 +58,19 @@ public class SessionInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    public void createSession(Users user, HttpServletResponse response) {
+    public void createSession(Account user, HttpServletResponse response) {
         Sessions session = sessionService.insertUserSession(user);
         addSessionCookie(response, session);
-        logger.info("Создана новая сессия для пользователя ID: {}", user.getId());
+        logger.info("Создана новая сессия для пользователя ID: {}", user.getLogin());
     }
 
     //todo: убрать проверку на null
     // разбить метод на несколько
     public boolean isUserAuthenticated(String sessionId, Model model) {
         if (sessionId != null) {
-            Users user = getUserFromSession(sessionId);
-            UsersDto usersDto = Mapper.UserMapper.mapUsersToUsersDto(user);
-            model.addAttribute("user", usersDto);
+            Account user = getUserFromSession(sessionId);
+//            UsersDto usersDto = Mapper.UserMapper.mapUsersToUsersDto(user);
+            model.addAttribute("user", user);
             return true;
         }
         model.addAttribute("user", new UserRegistrationDto());
@@ -83,7 +83,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         logger.info("Сессия истекла и удалена: {}", sessionUuid);
     }
 
-    public Users getUserFromSession(String sessionId) throws SessionNotFoundException {
+    public Account getUserFromSession(String sessionId) throws SessionNotFoundException {
         try {
             UUID sessionUuid = UUID.fromString(sessionId);
             Sessions session = sessionService.find(sessionUuid);
@@ -102,7 +102,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         session.setExpiresat(calendar.getTime());
         sessionService.updateOrSaveSession(session);
         updateSessionCookie(response, session);
-        logger.info("Сессия продлена. Пользователь ID: {}", session.getUserId().getId());
+        logger.info("Сессия продлена. Пользователь: {}", session.getUserId().getLogin());
     }
 
     private String getSessionIdFromCookies(HttpServletRequest request) {

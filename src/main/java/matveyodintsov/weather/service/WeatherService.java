@@ -2,6 +2,7 @@ package matveyodintsov.weather.service;
 
 import matveyodintsov.weather.api.Api;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
+import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.model.Weather;
@@ -26,7 +27,7 @@ public class WeatherService {
         this.weatherApi = weatherApi;
     }
 
-    public void insertUserLocation(String city, Users user) {
+    public void insertUserLocation(String city, Account user) {
         try {
             findLocationAndSaveUser(city, user);
         } catch (LocationNotFoundDataBase ignored) {
@@ -34,7 +35,7 @@ public class WeatherService {
         }
     }
 
-    public List<Weather> getUserWeathers(Users user) {
+    public List<Weather> getUserWeathers(Account user) {
         List<Weather> weatherList = new ArrayList<>();
         List<Location> locations = locationService.findAllLocationsFromUser(user);
         for (Location location : locations) {
@@ -44,20 +45,20 @@ public class WeatherService {
         return weatherList;
     }
 
-    private void findLocationAndSaveUser(String city, Users user) {
+    private void findLocationAndSaveUser(String city, Account user) {
         Location location = locationService.findCityLocationInDataBase(city, user);
         saveUserToLocation(user, location);
     }
 
-    private void findWeatherByCityNameAndSaveUserLocation(String city, Users user) {
+    private void findWeatherByCityNameAndSaveUserLocation(String city, Account user) {
         Weather weather = weatherApi.getWeatherByCity(city);
         Location location = weather.getLocation();
         location.setName(weather.getCityName());
         saveUserToLocation(user, location);
     }
 
-    private void saveUserToLocation(Users user, Location location) {
-        location.setUser(user);
+    private void saveUserToLocation(Account user, Location location) {
+        location.setUser((Users) user);
         locationService.save(location);
     }
 

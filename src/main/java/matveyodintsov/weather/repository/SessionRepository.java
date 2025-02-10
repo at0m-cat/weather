@@ -17,7 +17,7 @@ import java.util.UUID;
 public interface SessionRepository extends JpaRepository<Sessions, Long> {
 
     @Query("SELECT s FROM Sessions s WHERE s.userId = :user")
-    Sessions findByUserId(@Param("user") Users user);
+    Sessions findByUserId(@Param("user") Account user);
 
     @Query("SELECT s from Sessions s where s.id = :sessionId")
     Sessions findBySessionId(@Param("sessionId") UUID sessionId);

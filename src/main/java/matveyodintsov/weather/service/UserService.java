@@ -21,20 +21,23 @@ public class UserService {
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-    public void save(Users user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public void save(Account user) {
+        Users saveUser = new Users();
+        saveUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        saveUser.setLogin(user.getLogin());
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(saveUser);
     }
 
-    public Users findByLoginAndPassword(Users user) throws AuthNotFoundException {
-        Users foundUser = userRepository.findByLogin(user.getLogin());
+    public Account findByLoginAndPassword(Account user) throws AuthNotFoundException {
+        Account foundUser = userRepository.findByLogin(user.getLogin());
         if (foundUser == null || !bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
             throw new AuthNotFoundException("Invalid username or password");
         }
         return foundUser;
     }
 
-    public boolean existsByLogin(Users user) throws AuthNotFoundException {
+    public boolean existsByLogin(Account user) throws AuthNotFoundException {
         if (userRepository.existsByLogin(user.getLogin())) {
             throw new AuthNotFoundException("Login already exists");
         }

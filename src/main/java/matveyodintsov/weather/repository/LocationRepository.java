@@ -15,12 +15,12 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    List<Location> findAllByUser(Users user);
+    List<Location> findAllByUser(Account user);
 
     @Query("SELECT (COUNT(l) > 0) FROM Location l WHERE l.user = :user AND l.name = :name")
-    boolean existsByUserAndName(@Param("user") Users user, @Param("name") String name);
+    boolean existsByUserAndName(@Param("user") Account user, @Param("name") String name);
 
-    Optional<Location> findByUserAndName(Users user, String name);
+    Optional<Location> findByUserAndName(Account user, String name);
 
     Optional<Location> findByName(String name);
 
