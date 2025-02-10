@@ -1,7 +1,6 @@
 package matveyodintsov.weather.model;
 
 import jakarta.persistence.*;
-import matveyodintsov.weather.dto.UsersDto;
 
 import java.util.Date;
 import java.util.UUID;

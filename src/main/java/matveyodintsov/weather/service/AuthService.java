@@ -1,10 +1,7 @@
 package matveyodintsov.weather.service;
 
-import matveyodintsov.weather.dto.UserRegistrationDto;
 import matveyodintsov.weather.exeption.AuthNotFoundException;
 import matveyodintsov.weather.model.Account;
-import matveyodintsov.weather.model.Users;
-import matveyodintsov.weather.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

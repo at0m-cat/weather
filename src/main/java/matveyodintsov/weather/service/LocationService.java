@@ -3,7 +3,6 @@ package matveyodintsov.weather.service;
 import matveyodintsov.weather.exeption.LocationNotFoundDataBase;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Location;
-import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.LocationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
