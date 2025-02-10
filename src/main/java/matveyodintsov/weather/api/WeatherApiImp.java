@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class WeatherApi implements Api<Weather> {
+public class WeatherApiImp implements Api<Weather> {
 
     private final ObjectMapper objectMapper;
     private final String key;
@@ -24,9 +24,9 @@ public class WeatherApi implements Api<Weather> {
     private final String findLocationByLocationUrl;
 
     @Autowired
-    public WeatherApi(@Value("${weather.api.key}") String key,
-                      @Value("${weather.url.geo}") String findLocationByCityUrl,
-                      @Value("${weather.url.weather}") String findCityByLocationUrl) {
+    public WeatherApiImp(@Value("${weather.api.key}") String key,
+                         @Value("${weather.url.geo}") String findLocationByCityUrl,
+                         @Value("${weather.url.weather}") String findCityByLocationUrl) {
         this.objectMapper = new ObjectMapper();
         this.key = key;
         this.findLocationByCityUrl = findLocationByCityUrl;
