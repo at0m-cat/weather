@@ -2,8 +2,10 @@ package matveyodintsov.weather.controller;
 
 import matveyodintsov.weather.exeption.LocationLimitExceeded;
 import matveyodintsov.weather.model.Account;
+import matveyodintsov.weather.model.Location;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
+import matveyodintsov.weather.service.LocationService;
 import matveyodintsov.weather.service.WeatherService;
 import matveyodintsov.weather.util.AppConfig;
 import matveyodintsov.weather.util.SessionInterceptor;
@@ -26,12 +28,14 @@ public class WeatherController {
 
     private final SessionInterceptor sessionInterceptor;
     private final WeatherService<Weather, Account> weatherService;
+    private final LocationService<Location, Account> locationService;
     private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
 
     @Autowired
-    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService<Weather, Account> weatherService) {
+    public WeatherController(SessionInterceptor sessionInterceptor, WeatherService<Weather, Account> weatherService, LocationService<Location, Account> locationService) {
         this.sessionInterceptor = sessionInterceptor;
         this.weatherService = weatherService;
+        this.locationService = locationService;
     }
 
     @GetMapping("/find")
@@ -65,4 +69,13 @@ public class WeatherController {
         return "redirect:/";
     }
 
+    @PostMapping("/delete/{user}/{city}")
+    public String delete(@CookieValue(value = AppConfig.Constants.SESSION_ID, required = false) String sessionId, @PathVariable String city, @PathVariable String user) {
+        Account userFromSession = sessionInterceptor.getUserFromSession(sessionId);
+        if (userFromSession.getLogin().equalsIgnoreCase(user)) {
+            locationService.deleteUserLocation(city.toUpperCase(), userFromSession);
+            return "redirect:/";
+        }
+        throw new RuntimeException("Invalid user");
+    }
 }

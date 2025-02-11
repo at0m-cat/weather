@@ -1,8 +1,10 @@
 package matveyodintsov.weather.repository;
 
+import jakarta.transaction.Transactional;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,10 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     @Query("select (count(l) > 0) from Location l where l.name =:name")
     boolean existsByName(@Param("name") String name);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Location l where l.user =:user AND l.name =:name")
+    void deleteLocationByUser(@Param("name") String city,@Param("user") Account user);
+
 }

@@ -4,10 +4,12 @@ import java.util.List;
 
 public interface LocationService<T, K> {
 
-    public void save(T location);
+    void save(T location);
 
-    public T findCityLocationInDataBase(String city, K user);
+    void deleteUserLocation(String city, K user);
 
-    public List<T> findAllLocationsFromUser(K user);
+    T findCityLocationInDataBase(String city, K user);
+
+    List<T> findAllLocationsFromUser(K user);
 
 }

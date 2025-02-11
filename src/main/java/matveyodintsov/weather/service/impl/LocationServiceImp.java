@@ -32,6 +32,11 @@ public class LocationServiceImp implements LocationService<Location, Account> {
     }
 
     @Override
+    public void deleteUserLocation(String city, Account user) {
+        locationRepository.deleteLocationByUser(city, user);
+    }
+
+    @Override
     public Location findCityLocationInDataBase(String city, Account user) throws LocationNotFoundDataBase {
         if (existsByName(city)) {
             return findByName(city);

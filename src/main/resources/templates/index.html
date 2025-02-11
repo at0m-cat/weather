@@ -47,9 +47,13 @@
                     <p>📍 Pressure: <span th:text="${weather.pressure}">0</span> hPa</p>
                 </div>
             </div>
-            <button class="delete-btn hidden">
-                <i class="fas fa-trash-alt"></i>
-            </button>
+
+            <form
+                    th:method="post"
+                    th:action="@{/weather/delete/{user}/{city} (user=${user.login}, city=${weather.cityName})}">
+                <button type="submit" class="edit-btn btn btn-delete">Delete weather</button>
+            </form>
+
         </div>
 
         <form class="weather-card add-city-card"  id="add-city-form">
