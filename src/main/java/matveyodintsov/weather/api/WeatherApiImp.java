@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.IllegalCharsetNameException;
 
 @Component
 public class WeatherApiImp implements Api<Weather> {
@@ -62,8 +63,8 @@ public class WeatherApiImp implements Api<Weather> {
 
             return objectMapper.readTree(response.getEntity().getContent());
 
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (Exception ignored) {
+            throw new RuntimeException("Could not get weather data");
         }
     }
 

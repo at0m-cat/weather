@@ -11,6 +11,7 @@ public class AppConfig {
         public static final String CITY = "{city}";
         public static final String LATITUDE = "{lat}";
         public static final String LONGITUDE = "{lon}";
+        public static int LOCATION_LIMIT = 5;
     }
 
     public static final class Validate {

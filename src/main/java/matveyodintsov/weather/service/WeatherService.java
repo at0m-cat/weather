@@ -8,4 +8,6 @@ public interface WeatherService<T, K> {
     public void insertUserLocation(String city, K user);
 
     public List<T> getUserWeathers(K user);
+
+    public int getUserWeatherCount(K user);
 }

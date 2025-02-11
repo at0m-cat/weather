@@ -23,6 +23,7 @@ public class LocationServiceImp implements LocationService<Location, Account> {
         this.locationRepository = locationRepository;
     }
 
+    @Override
     public void save(Location location) {
         if (!existsByUserAndName(location.getUser(), location.getName().toUpperCase())) {
             location.setName(location.getName().toUpperCase());
@@ -30,6 +31,7 @@ public class LocationServiceImp implements LocationService<Location, Account> {
         }
     }
 
+    @Override
     public Location findCityLocationInDataBase(String city, Account user) throws LocationNotFoundDataBase {
         if (existsByName(city)) {
             return findByName(city);
@@ -40,6 +42,7 @@ public class LocationServiceImp implements LocationService<Location, Account> {
         throw new LocationNotFoundDataBase("Location not found");
     }
 
+    @Override
     public List<Location> findAllLocationsFromUser(Account user) {
         return locationRepository.findAllByUser(user);
     }

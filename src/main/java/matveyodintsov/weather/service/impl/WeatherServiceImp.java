@@ -29,6 +29,7 @@ public class WeatherServiceImp implements WeatherService<Weather, Account> {
         this.weatherApi = weatherApi;
     }
 
+    @Override
     public void insertUserLocation(String city, Account user) {
         try {
             findLocationAndSaveUser(city, user);
@@ -37,6 +38,7 @@ public class WeatherServiceImp implements WeatherService<Weather, Account> {
         }
     }
 
+    @Override
     public List<Weather> getUserWeathers(Account user) {
         List<Weather> weatherList = new ArrayList<>();
         List<Location> locations = locationService.findAllLocationsFromUser(user);
@@ -45,6 +47,11 @@ public class WeatherServiceImp implements WeatherService<Weather, Account> {
             weatherList.add(weather);
         }
         return weatherList;
+    }
+
+    @Override
+    public int getUserWeatherCount(Account user) {
+        return locationService.findAllLocationsFromUser(user).size();
     }
 
     private void findLocationAndSaveUser(String city, Account user) {

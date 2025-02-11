@@ -1,5 +1,6 @@
 package matveyodintsov.weather.controller;
 
+import matveyodintsov.weather.exeption.LocationLimitExceeded;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Weather;
 import matveyodintsov.weather.exeption.IncorrectCityNameValue;
@@ -38,6 +39,13 @@ public class WeatherController {
         if (!sessionInterceptor.isUserAuthenticated(sessionId, model)) {
             return "redirect:/login";
         }
+        Account userFromSession = sessionInterceptor.getUserFromSession(sessionId);
+
+        int weatherCountByUser = weatherService.getUserWeatherCount(userFromSession);
+        if (weatherCountByUser >= AppConfig.Constants.LOCATION_LIMIT) {
+            throw new LocationLimitExceeded("Location limit exceeded");
+        }
+
         model.addAttribute("weather", new Weather());
         return "weather/add-weather";
     }
