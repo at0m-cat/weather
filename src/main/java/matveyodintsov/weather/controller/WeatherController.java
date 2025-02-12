@@ -20,12 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/weather")
 public class WeatherController {
 
-    //todo:
-    // создать список погоды пользователя /weather/{user}
-    // создать /weather/{user}/{city} - подробная информация о погоде на отдельной странице
-    // создать лимит добавления погоды (5 городов)
-    // создать удаление погоды
-
     private final SessionInterceptor sessionInterceptor;
     private final WeatherService<Weather, Account> weatherService;
     private final LocationService<Location, Account> locationService;

@@ -38,9 +38,6 @@ public class UserServiceImp implements UserService<Account> {
     }
 
     public boolean existsByLogin(Account user) throws AuthNotFoundException {
-        if (userRepository.existsByLogin(user.getLogin())) {
-            throw new AuthNotFoundException("Login already exists");
-        }
-        return false;
+        return userRepository.existsByLogin(user.getLogin());
     }
 }

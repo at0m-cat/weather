@@ -13,7 +13,7 @@ public class AuthServiceImp implements AuthService<Account> {
     private final UserService<Account> userService;
 
     @Autowired
-    public AuthServiceImp(UserServiceImp userService) {
+    public AuthServiceImp(UserService<Account> userService) {
         this.userService = userService;
     }
 
@@ -24,6 +24,8 @@ public class AuthServiceImp implements AuthService<Account> {
     public void register(Account userDto) throws AuthNotFoundException {
         if (!userService.existsByLogin(userDto)) {
             userService.save(userDto);
+        } else {
+            throw new AuthNotFoundException("Login already exists");
         }
     }
 }
