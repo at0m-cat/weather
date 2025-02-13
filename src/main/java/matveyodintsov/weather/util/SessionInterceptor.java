@@ -8,13 +8,12 @@ import matveyodintsov.weather.exeption.SessionNotFoundException;
 import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Sessions;
 import matveyodintsov.weather.service.SessionService;
-import matveyodintsov.weather.service.impl.SessionServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Calendar;
@@ -123,7 +122,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, session.getId().toString());
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
-//        cookie.setPath("/");
+        cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
@@ -139,7 +138,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, "");
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
-//        cookie.setPath("/");
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 }
