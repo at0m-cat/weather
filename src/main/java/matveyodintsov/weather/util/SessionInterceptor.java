@@ -123,7 +123,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, session.getId().toString());
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
-        cookie.setPath("/");
+//        cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
@@ -139,7 +139,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, "");
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
-        cookie.setPath("/");
+//        cookie.setPath("/");
         response.addCookie(cookie);
     }
 }
