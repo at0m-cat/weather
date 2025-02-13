@@ -59,6 +59,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         return true;
     }
 
+
     public void createSession(Account user, HttpServletResponse response) {
         Sessions session = sessionService.insertUserSession(user);
         addSessionCookie(response, session);
@@ -124,6 +125,8 @@ public class SessionInterceptor implements HandlerInterceptor {
         cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
+
+        logger.info("Set-Cookie: SESSION={}, Secure={}, SameSite=None", session.getId(), cookie.getSecure());
     }
 
     private void updateSessionCookie(HttpServletResponse response, Sessions session) {
