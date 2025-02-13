@@ -9,6 +9,8 @@ import matveyodintsov.weather.service.SessionService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Date;
 import java.util.UUID;
@@ -16,6 +18,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class SessionServiceImplTest {
 
     private final SessionRepository sessionRepository = Mockito.mock(SessionRepository.class);
