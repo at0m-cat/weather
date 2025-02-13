@@ -121,7 +121,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     private void addSessionCookie(HttpServletResponse response, Sessions session) {
         Cookie cookie = new Cookie(AppConfig.Constants.SESSION_ID, session.getId().toString());
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
