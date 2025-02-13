@@ -21,7 +21,6 @@ public class WeatherServiceImp implements WeatherService<Weather, Account> {
 
     private final LocationService<Location, Account> locationService;
     private final Api<Weather> weatherApi;
-    private static final Logger logger = LoggerFactory.getLogger(WeatherServiceImp.class);
 
     @Autowired
     public WeatherServiceImp(LocationService<Location, Account> locationService, Api<Weather> weatherApi) {

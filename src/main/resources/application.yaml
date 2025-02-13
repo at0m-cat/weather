@@ -5,6 +5,12 @@ server:
     include-binding-errors: always
     include-exception: true
     include-stacktrace: on_param
+  servlet:
+    session:
+      cookie:
+        secure: true
+        same-site: None
+
 
 spring:
   application:
