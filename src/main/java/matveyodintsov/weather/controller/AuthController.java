@@ -18,11 +18,6 @@ import java.util.UUID;
 @RequestMapping()
 public class AuthController {
 
-    //todo:
-    // UsersDto (только логин и ID)
-    // UsersRegistrationDto для регистрации (поля паролей) -> map to User -> save
-    // не использовать Users в сервисах, использовать UsersDto (id, login) -> создать маппер
-
     private final AuthService<Account> authService;
     private final SessionInterceptor sessionInterceptor;
 

@@ -5,21 +5,16 @@ import matveyodintsov.weather.model.Account;
 import matveyodintsov.weather.model.Users;
 import matveyodintsov.weather.repository.UserRepository;
 import matveyodintsov.weather.service.UserService;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-//
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.yaml")
@@ -29,7 +24,6 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
     @Autowired
     private UserService<Account> userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Test
     @DisplayName("test save")
