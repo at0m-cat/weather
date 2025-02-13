@@ -7,30 +7,27 @@ server:
     include-stacktrace: on_param
 
 spring:
-  application:
-    name: weather
-  profiles:
-    active: dev
+  config:
+    activate:
+      on-profile: test
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/weather_db
-    username: admin
-    password: secret
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
 
   flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
+    enabled: false
 
 weather:
   url:
